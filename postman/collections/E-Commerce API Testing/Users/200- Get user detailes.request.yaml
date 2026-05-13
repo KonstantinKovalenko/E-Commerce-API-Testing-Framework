@@ -6,27 +6,19 @@ queryParams:
   email: "{{userEmail}}"
 scripts:
   - type: afterResponse
-    code: "const jsonResponse = pm.response.json()\r
+    code: "eval(pm.globals.get(\"utils\"));\r
+
+      const jsonResponse = pm.response.json()\r
+
+      \r
+
+      validateStatusCode(200);\r
+
+      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode, 200)\r
+
+      \r
 
       const user = jsonResponse.user;\r
-
-      \r
-
-      pm.test(\"Status code is 200\", function () {\r
-
-      \    pm.response.to.have.status(200);\r
-
-      });\r
-
-      \r
-
-      pm.test(\"responseCode validation\", function () {\r
-
-      \    pm.expect(jsonResponse.responseCode).to.eql(200);\r
-
-      });\r
-
-      \r
 
       pm.test(\"User data matches environment variables\", () => {\r
 

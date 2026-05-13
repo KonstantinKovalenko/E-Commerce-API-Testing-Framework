@@ -2,7 +2,37 @@ $kind: collection
 name: E-Commerce API Testing
 scripts:
   - type: http:beforeRequest
-    code: "if(!pm.environment.get(\"userName\")){\r
+    code: "pm.globals.set(\"utils\", `\r
+
+      \r
+
+      \    function validateStatusCode(expectedCode) {\r
+
+      \        pm.test(\\`Status code is \\${expectedCode}\\`, () => {\r
+
+      \            pm.response.to.have.status(expectedCode);\r
+
+      \        });\r
+
+      \    }\r
+
+      \r
+
+      \    function validateJsonValue(key, actualValue, expectedValue) {\r
+
+      \        pm.test(\\`\\${key} validation\\`, () => {\r
+
+      \            pm.expect(actualValue).to.eql(expectedValue);\r
+
+      \        });\r
+
+      \    }\r
+
+      `);\r
+
+      \r
+
+      if(!pm.environment.get(\"userName\")){\r
 
       \    const currentDate = Date.now();\r
 

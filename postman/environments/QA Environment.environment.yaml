@@ -1,2 +1,4 @@
 name: QA Environment
-values: []
+values:
+  - key: baseUrl
+    value: ''

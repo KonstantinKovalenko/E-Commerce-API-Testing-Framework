@@ -1,2 +1,27 @@
 $kind: collection
 name: E-Commerce API Testing
+scripts:
+  - type: http:beforeRequest
+    code: "if(!pm.environment.get(\"userName\")){\r
+
+      \    const currentDate = Date.now();\r
+
+      \    const random = Math.floor(Math.random() * 100);\r
+
+      \r
+
+      \    pm.environment.set(\"currentRandom\", currentDate);\r
+
+      \    pm.environment.set(\"userName\", `user_${currentDate}`);\r
+
+      \    pm.environment.set(\"userEmail\", `email_${currentDate}@qa.com`)\r
+
+      \    pm.environment.set(\"userPassword\", `Qa!${currentDate}${random}`)\r
+
+      \r
+
+      \r
+
+      \    console.log(\"If worked\")\r
+
+      }else{console.log(\"Else worked\")}"

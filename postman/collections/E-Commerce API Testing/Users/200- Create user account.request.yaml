@@ -1,0 +1,54 @@
+$kind: http-request
+name: "200: Create user account"
+url: "{{baseUrl}}/createAccount"
+method: POST
+body:
+  type: urlencoded
+  content:
+    name: "{{userName}}"
+    email: "{{userEmail}}"
+    password: "{{userPassword}}"
+    title: "1"
+    birth_date: "1"
+    birth_month: "1"
+    birth_year: "1"
+    firstname: "1"
+    lastname: "1"
+    company: "1"
+    address1: "1"
+    address2: "1"
+    country: "1"
+    zipcode: "1"
+    state: "1"
+    city: "1"
+    mobile_number: "1"
+    "": "1"
+scripts:
+  - type: afterResponse
+    code: "const jsonResponse = pm.response.json()\r
+
+      \r
+
+      pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"responseCode validation\", function () {\r
+
+      \    pm.expect(jsonResponse.responseCode).to.eql(201);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"message validation\", function () {\r
+
+      \    pm.expect(jsonResponse.message).to.eql(\"User created!\");\r
+
+      });"
+    language: text/javascript
+order: 1778670121172

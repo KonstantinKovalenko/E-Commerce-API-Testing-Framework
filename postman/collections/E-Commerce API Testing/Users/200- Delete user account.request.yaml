@@ -1,0 +1,52 @@
+$kind: http-request
+name: "200: Delete user account"
+url: "{{baseUrl}}/deleteAccount"
+method: DELETE
+body:
+  type: urlencoded
+  content:
+    email: "{{userEmail}}"
+    password: "{{userPassword}}"
+scripts:
+  - type: afterResponse
+    code: "const jsonResponse = pm.response.json()\r
+
+      \r
+
+      pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"responseCode validation\", function () {\r
+
+      \    pm.expect(jsonResponse.responseCode).to.eql(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"message validation\", function () {\r
+
+      \    pm.expect(jsonResponse.message).to.eql(\"Account deleted!\");\r
+
+      });\r
+
+      \r
+
+      const keysArray = Object.keys(pm.environment.toObject());\r
+
+      for(let i = 0; i < keysArray.length; i++){\r
+
+      \    if(keysArray[i] != \"baseUrl\"){\r
+
+      \        pm.environment.unset(keysArray[i])\r
+
+      \    }\r
+
+      }"
+    language: text/javascript
+order: 421141027583591

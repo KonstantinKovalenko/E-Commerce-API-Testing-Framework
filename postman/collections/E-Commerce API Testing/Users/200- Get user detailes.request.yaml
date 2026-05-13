@@ -1,0 +1,69 @@
+$kind: http-request
+name: "200: Get user detailes"
+url: "{{baseUrl}}/getUserDetailByEmail?email={{userEmail}}"
+method: GET
+queryParams:
+  email: "{{userEmail}}"
+scripts:
+  - type: afterResponse
+    code: "const jsonResponse = pm.response.json()\r
+
+      const user = jsonResponse.user;\r
+
+      \r
+
+      pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"responseCode validation\", function () {\r
+
+      \    pm.expect(jsonResponse.responseCode).to.eql(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"User data matches environment variables\", () => {\r
+
+      \r
+
+      \    pm.expect(user.id).to.be.greaterThan(0);\r
+
+      \    pm.expect(user.name).to.eql(pm.environment.get(\"userName\"));\r
+
+      \    pm.expect(user.email).to.eql(pm.environment.get(\"userEmail\"));\r
+
+      \    pm.expect(user.title).to.eql(pm.environment.get(\"userTitle\"));\r
+
+      \    pm.expect(user.birth_day).to.eql(pm.environment.get(\"userBDay\"));\r
+
+      \    pm.expect(user.birth_month).to.eql(pm.environment.get(\"userBMonth\"));\r
+
+      \    pm.expect(user.birth_year).to.eql(pm.environment.get(\"userBYear\"));\r
+
+      \    pm.expect(user.first_name).to.eql(pm.environment.get(\"userFirst\"));\r
+
+      \    pm.expect(user.last_name).to.eql(pm.environment.get(\"userLast\"));\r
+
+      \    pm.expect(user.company).to.eql(pm.environment.get(\"userCompany\"));\r
+
+      \    pm.expect(user.address1).to.eql(pm.environment.get(\"userAdd1\"));\r
+
+      \    pm.expect(user.address2).to.eql(pm.environment.get(\"userAdd2\"));\r
+
+      \    pm.expect(user.country).to.eql(pm.environment.get(\"userCountry\"));\r
+
+      \    pm.expect(user.state).to.eql(pm.environment.get(\"userState\"));\r
+
+      \    pm.expect(user.city).to.eql(pm.environment.get(\"userCity\"));\r
+
+      \    pm.expect(user.zipcode).to.eql(pm.environment.get(\"userZip\"));\r
+
+      });"
+    language: text/javascript
+order: 1658712272858431

@@ -20,8 +20,6 @@ scripts:
 
       \r
 
-      \r
-
       \    console.log(\"If worked\")\r
 
       }else{console.log(\"Else worked\")}"

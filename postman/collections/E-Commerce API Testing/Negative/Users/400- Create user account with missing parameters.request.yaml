@@ -35,4 +35,4 @@ scripts:
       validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message,
       \"Bad request, state parameter is missing in POST request.\")"
     language: text/javascript
-order: 1000
+order: 902

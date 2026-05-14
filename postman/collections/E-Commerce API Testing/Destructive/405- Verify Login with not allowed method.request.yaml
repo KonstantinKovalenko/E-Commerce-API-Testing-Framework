@@ -23,9 +23,11 @@ scripts:
 
       validateStatusCode(200);\r
 
-      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode, 405)\r
+      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode,
+      405)\r
 
-      validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message, \"This request method is not supported.\")\r
+      validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message,
+      \"This request method is not supported.\")\r
 
       \r
 
@@ -58,4 +60,4 @@ scripts:
 
       pm.environment.set(\"METHOD\", methods[currentIndex]);"
     language: text/javascript
-order: 2023164598352096
+order: 3632744608255950

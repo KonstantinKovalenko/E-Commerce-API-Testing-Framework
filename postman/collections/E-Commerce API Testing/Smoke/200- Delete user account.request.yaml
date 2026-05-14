@@ -1,7 +1,7 @@
 $kind: http-request
-name: "200: Verify Login with valid credentials"
-url: "{{baseUrl}}/verifyLogin"
-method: POST
+name: "200: Delete user account"
+url: "{{baseUrl}}/deleteAccount"
+method: DELETE
 body:
   type: urlencoded
   content:
@@ -21,6 +21,8 @@ scripts:
       200)\r
 
       validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message,
-      \"User exists!\")"
+      \"Account deleted!\")\r
+
+      \r\n"
     language: text/javascript
-order: 2000
+order: 4051739860939061

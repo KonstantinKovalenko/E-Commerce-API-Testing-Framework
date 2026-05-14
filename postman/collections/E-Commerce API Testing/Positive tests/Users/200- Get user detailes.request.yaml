@@ -14,7 +14,8 @@ scripts:
 
       validateStatusCode(200);\r
 
-      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode, 200)\r
+      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode,
+      200)\r
 
       \r
 
@@ -34,21 +35,26 @@ scripts:
 
       \    pm.expect(user.birth_day).to.eql(pm.environment.get(\"userBDay\"));\r
 
-      \    pm.expect(user.birth_month).to.eql(pm.environment.get(\"userBMonth\"));\r
+      \    pm.expect(user.birth_month).to.eql(pm.environment.get(\"userBMonth\"\
+      ));\r
 
-      \    pm.expect(user.birth_year).to.eql(pm.environment.get(\"userBYear\"));\r
+      \    pm.expect(user.birth_year).to.eql(pm.environment.get(\"userBYear\"));\
+      \r
 
-      \    pm.expect(user.first_name).to.eql(pm.environment.get(\"userFirst\"));\r
+      \    pm.expect(user.first_name).to.eql(pm.environment.get(\"userFirst\"));\
+      \r
 
       \    pm.expect(user.last_name).to.eql(pm.environment.get(\"userLast\"));\r
 
-      \    pm.expect(user.company).to.eql(pm.environment.get(\"userCompany\"));\r
+      \    pm.expect(user.company).to.eql(pm.environment.get(\"userCompany\"));\
+      \r
 
       \    pm.expect(user.address1).to.eql(pm.environment.get(\"userAdd1\"));\r
 
       \    pm.expect(user.address2).to.eql(pm.environment.get(\"userAdd2\"));\r
 
-      \    pm.expect(user.country).to.eql(pm.environment.get(\"userCountry\"));\r
+      \    pm.expect(user.country).to.eql(pm.environment.get(\"userCountry\"));\
+      \r
 
       \    pm.expect(user.state).to.eql(pm.environment.get(\"userState\"));\r
 
@@ -58,4 +64,4 @@ scripts:
 
       });"
     language: text/javascript
-order: 1658712272858431
+order: 4000

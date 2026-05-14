@@ -1,0 +1,21 @@
+$kind: http-request
+name: "400: Verify Login with wrong parameter"
+url: "{{baseUrl}}/verifyLogin"
+method: POST
+body:
+  type: urlencoded
+scripts:
+  - type: afterResponse
+    code: "eval(pm.globals.get(\"utils\"));\r
+
+      const jsonResponse = pm.response.json()\r
+
+      \r
+
+      validateStatusCode(200);\r
+
+      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode, 400)\r
+
+      validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message, \"Bad request, email or password parameter is missing in POST request.\")"
+    language: text/javascript
+order: 1073482809306902

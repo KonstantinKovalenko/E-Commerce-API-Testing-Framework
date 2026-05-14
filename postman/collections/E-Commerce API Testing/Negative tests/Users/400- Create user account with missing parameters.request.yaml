@@ -1,0 +1,38 @@
+$kind: http-request
+name: "400: Create user account with missing parameters"
+url: "{{baseUrl}}/createAccount"
+method: POST
+body:
+  type: urlencoded
+  content:
+    name: "{{userName}}"
+    email: "{{userEmail}}"
+    password: "{{userPassword}}"
+    title: "{{userTitle}}"
+    birth_date: "{{userBDay}}"
+    birth_month: "{{userBMonth}}"
+    birth_year: "{{userBYear}}"
+    firstname: "{{userFirst}}"
+    lastname: "{{userLast}}"
+    company: "{{userCompany}}"
+    address1: "{{userAdd1}}"
+    address2: "{{userAdd2}}"
+    country: "{{userCountry}}"
+    zipcode: "{{userZip}}"
+scripts:
+  - type: afterResponse
+    code: "eval(pm.globals.get(\"utils\"));\r
+
+      const jsonResponse = pm.response.json();\r
+
+      \r
+
+      validateStatusCode(200);\r
+
+      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode,
+      400)\r
+
+      validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message,
+      \"Bad request, state parameter is missing in POST request.\")"
+    language: text/javascript
+order: 1000

@@ -21,18 +21,6 @@ scripts:
 
       validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message, \"Account deleted!\")\r
 
-      \r
-
-      const keysArray = Object.keys(pm.environment.toObject());\r
-
-      for(let i = 0; i < keysArray.length; i++){\r
-
-      \    if(keysArray[i] != \"baseUrl\"){\r
-
-      \        pm.environment.unset(keysArray[i])\r
-
-      \    }\r
-
-      }"
+      \r\n"
     language: text/javascript
-order: 421141027583591
+order: 3000

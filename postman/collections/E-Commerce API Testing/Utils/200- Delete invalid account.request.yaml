@@ -1,0 +1,28 @@
+$kind: http-request
+name: "200: Delete invalid account"
+url: "{{baseUrl}}/deleteAccount"
+method: DELETE
+body:
+  type: urlencoded
+  content:
+    - key: email
+      value: "{{userInvalidEmail}}"
+    - key: password
+      value: "{{userPassword}}"
+scripts:
+  - type: afterResponse
+    code: "eval(pm.globals.get(\"utils\"));\r
+
+      const jsonResponse = pm.response.json()\r
+
+      \r
+
+      validateStatusCode(200);\r
+
+      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode,
+      200)\r
+
+      validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message,
+      \"Account deleted!\")"
+    language: text/javascript
+order: 1526053220910962

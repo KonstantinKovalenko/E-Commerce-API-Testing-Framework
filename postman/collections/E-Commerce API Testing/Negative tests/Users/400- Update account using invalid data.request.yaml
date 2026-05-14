@@ -1,0 +1,75 @@
+$kind: http-request
+name: "400: Update account using invalid data"
+url: "{{baseUrl}}/updateAccount"
+method: PUT
+body:
+  type: urlencoded
+  content:
+    - key: name
+      value: "{{userName}}"
+      disabled: true
+    - key: email
+      value: "{{userInvalidEmail}}"
+      disabled: false
+    - key: password
+      value: "{{userPassword}}"
+      disabled: false
+    - key: title
+      value: "{{userTitle}}"
+      disabled: true
+    - key: birth_date
+      value: birthday
+      disabled: false
+    - key: birth_month
+      value: "{{userBMonth}}"
+      disabled: true
+    - key: birth_year
+      value: "{{userBYear}}"
+      disabled: true
+    - key: firstname
+      value: "{{userFirst}}"
+      disabled: true
+    - key: lastname
+      value: "{{userLast}}"
+      disabled: true
+    - key: company
+      value: "\"/*'"
+      disabled: false
+    - key: address1
+      value: "{{userAdd1}}"
+      disabled: true
+    - key: address2
+      value: "{{userAdd2}}"
+      disabled: true
+    - key: country
+      value: "{{userCountry}}"
+      disabled: true
+    - key: zipcode
+      value: '"test"'
+      disabled: false
+    - key: state
+      value: "{{userState}}"
+      disabled: true
+    - key: city
+      value: "{{userCity}}"
+      disabled: true
+    - key: mobile_number
+      value: "{{userMobile}}"
+      disabled: true
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"API should reject invalid input\", () => {\r
+
+      \    pm.expect(pm.response.code).to.be.oneOf([400, 422]);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Server should handle special characters safely\", () => {\r
+
+      \    pm.expect(pm.response.code).to.not.eql(500);\r
+
+      });"
+    language: text/javascript
+order: 2308

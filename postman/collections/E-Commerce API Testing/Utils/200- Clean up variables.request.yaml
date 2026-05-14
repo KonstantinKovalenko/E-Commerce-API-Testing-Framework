@@ -1,0 +1,19 @@
+$kind: http-request
+name: "200: Clean up variables"
+url: "{{baseUrl}}/verifyLogin"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: "const keysArray = Object.keys(pm.environment.toObject());\r
+
+      for(let i = 0; i < keysArray.length; i++){\r
+
+      \    if(keysArray[i] != \"baseUrl\"){\r
+
+      \        pm.environment.unset(keysArray[i])\r
+
+      \    }\r
+
+      }"
+    language: text/javascript
+order: 1778755868475

@@ -1,0 +1,61 @@
+$kind: http-request
+name: "405: Verify Login with not allowed method"
+url: "{{baseUrl}}/verifyLogin"
+method: "{{METHOD}}"
+body:
+  type: urlencoded
+  content:
+    - key: email
+      value: "{{userEmail}}"
+      disabled: true
+    - key: password
+      value: "{{userPassword}}"
+      disabled: true
+scripts:
+  - type: afterResponse
+    code: "eval(pm.globals.get(\"utils\"));\r
+
+      const jsonResponse = pm.response.json()\r
+
+      const methods = [\"GET\", \"PUT\", \"PATCH\", \"DELETE\"];\r
+
+      \r
+
+      validateStatusCode(200);\r
+
+      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode, 405)\r
+
+      validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message, \"This request method is not supported.\")\r
+
+      \r
+
+      let currentIndex = Number(pm.environment.get(\"methodIndex\") || 0);\r
+
+      currentIndex++;\r
+
+      \r
+
+      if (currentIndex < methods.length) {\r
+
+      \    pm.environment.set(\"methodIndex\", currentIndex);\r
+
+      \    pm.execution.setNextRequest(pm.info.requestName);\r
+
+      } else {\r
+
+      \    pm.environment.unset(\"methodIndex\");\r
+
+      \    pm.execution.setNextRequest(null);\r
+
+      }"
+    language: text/javascript
+  - type: beforeRequest
+    code: "const methods = [\"GET\", \"PUT\", \"PATCH\", \"DELETE\"];\r
+
+      \r
+
+      let currentIndex = Number(pm.environment.get(\"methodIndex\") || 0);\r
+
+      pm.environment.set(\"METHOD\", methods[currentIndex]);"
+    language: text/javascript
+order: 2023164598352096

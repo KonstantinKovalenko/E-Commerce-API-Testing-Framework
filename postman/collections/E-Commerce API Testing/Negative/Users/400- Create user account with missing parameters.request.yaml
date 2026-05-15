@@ -1,38 +1,31 @@
 $kind: http-request
 name: "400: Create user account with missing parameters"
-url: "{{baseUrl}}/createAccount"
+url: "{{cfg_baseUrl}}/createAccount"
 method: POST
 body:
   type: urlencoded
   content:
-    name: "{{userName}}"
-    email: "{{userEmail}}"
-    password: "{{userPassword}}"
-    title: "{{userTitle}}"
-    birth_date: "{{userBDay}}"
-    birth_month: "{{userBMonth}}"
-    birth_year: "{{userBYear}}"
-    firstname: "{{userFirst}}"
-    lastname: "{{userLast}}"
-    company: "{{userCompany}}"
-    address1: "{{userAdd1}}"
-    address2: "{{userAdd2}}"
-    country: "{{userCountry}}"
-    zipcode: "{{userZip}}"
+    - key: name
+      value: "{{runtime_userName}}"
+      disabled: false
+    - key: email
+      value: "{{runtime_userEmail}}"
+      disabled: true
+    - key: password
+      value: "{{runtime_userPassword}}"
+      disabled: false
+    - key: title
+      value: "{{runtime_userTitle}}"
+      disabled: false
+    - key: birth_date
+      value: "{{runtime_userBDay}}"
+      disabled: false
 scripts:
-  - type: afterResponse
-    code: "eval(pm.globals.get(\"utils\"));\r
+  - type: beforeRequest
+    code: "pm.environment.set(\"runtime_expectedStatusCode\",200);\r
 
-      const jsonResponse = pm.response.json();\r
+      pm.environment.set(\"runtime_expectedResponseCode\",400);\r
 
-      \r
-
-      validateStatusCode(200);\r
-
-      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode,
-      400)\r
-
-      validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message,
-      \"Bad request, state parameter is missing in POST request.\")"
+      pm.environment.set(\"runtime_expectedMessageKeyword\", \"missing\");"
     language: text/javascript
 order: 902

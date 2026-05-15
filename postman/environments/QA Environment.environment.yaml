@@ -1,4 +1,4 @@
 name: QA Environment
 values:
-  - key: baseUrl
+  - key: cfg_baseUrl
     value: ''

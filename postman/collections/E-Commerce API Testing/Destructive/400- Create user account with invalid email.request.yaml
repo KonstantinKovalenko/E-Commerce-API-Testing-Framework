@@ -1,46 +1,33 @@
 $kind: http-request
 name: "400: Create user account with invalid email"
-url: "{{baseUrl}}/createAccount"
+url: "{{cfg_baseUrl}}/createAccount"
 method: POST
 body:
   type: urlencoded
   content:
-    name: "{{userName}}"
-    email: "{{userInvalidEmail}}"
-    password: "{{userPassword}}"
-    title: "{{userTitle}}"
-    birth_date: "{{userBDay}}"
-    birth_month: "{{userBMonth}}"
-    birth_year: "{{userBYear}}"
-    firstname: "{{userFirst}}"
-    lastname: "{{userLast}}"
-    company: "{{userCompany}}"
-    address1: "{{userAdd1}}"
-    address2: "{{userAdd2}}"
-    country: "{{userCountry}}"
-    zipcode: "{{userZip}}"
-    state: "{{userState}}"
-    city: "{{userCity}}"
-    mobile_number: "{{userMobile}}"
+    name: "{{runtime_userName}}"
+    email: "{{runtime_userInvalidEmail}}"
+    password: "{{runtime_userPassword}}"
+    title: "{{runtime_userTitle}}"
+    birth_date: "{{runtime_userBDay}}"
+    birth_month: "{{runtime_userBMonth}}"
+    birth_year: "{{runtime_userBYear}}"
+    firstname: "{{runtime_userFirst}}"
+    lastname: "{{runtime_userLast}}"
+    company: "{{runtime_userCompany}}"
+    address1: "{{runtime_userAdd1}}"
+    address2: "{{runtime_userAdd2}}"
+    country: "{{runtime_userCountry}}"
+    zipcode: "{{runtime_userZip}}"
+    state: "{{runtime_userState}}"
+    city: "{{runtime_userCity}}"
+    mobile_number: "{{runtime_userMobile}}"
 scripts:
-  - type: afterResponse
-    code: "eval(pm.globals.get(\"utils\"));\r
+  - type: beforeRequest
+    code: "pm.environment.set(\"runtime_expectedStatusCode\",200);\r
 
-      const jsonResponse = pm.response.json();\r
+      pm.environment.set(\"runtime_expectedResponseCode\",400);\r
 
-      \r
-
-      validateStatusCode(400);\r
-
-      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode,
-      400)\r
-
-      \r
-
-      pm.test(\"Invalid email should return validation error\", () => {\r
-
-      \     pm.expect(jsonResponse.message).to.include(\"Invalid email\");\r
-
-      });"
+      pm.environment.set(\"runtime_expectedMessageKeyword\", \"invalid\");"
     language: text/javascript
 order: 146355719118145

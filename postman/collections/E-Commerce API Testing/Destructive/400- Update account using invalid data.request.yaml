@@ -1,60 +1,60 @@
 $kind: http-request
 name: "400: Update account using invalid data"
-url: "{{baseUrl}}/updateAccount"
+url: "{{cfg_baseUrl}}/updateAccount"
 method: PUT
 body:
   type: urlencoded
   content:
     - key: name
-      value: "{{userName}}"
+      value: "{{runtime_userName}}"
       disabled: true
     - key: email
-      value: "{{userInvalidEmail}}"
+      value: "{{runtime_userInvalidEmail}}"
       disabled: false
     - key: password
-      value: "{{userPassword}}"
+      value: "{{runtime_userPassword}}"
       disabled: false
     - key: title
-      value: "{{userTitle}}"
+      value: "{{runtime_userTitle}}"
       disabled: true
     - key: birth_date
       value: birthday
       disabled: false
     - key: birth_month
-      value: "{{userBMonth}}"
+      value: "{{runtime_userBMonth}}"
       disabled: true
     - key: birth_year
-      value: "{{userBYear}}"
+      value: "{{runtime_userBYear}}"
       disabled: true
     - key: firstname
-      value: "{{userFirst}}"
-      disabled: true
+      value: <script>alert(1)</script>
+      disabled: false
     - key: lastname
-      value: "{{userLast}}"
+      value: "{{runtime_userLast}}"
       disabled: true
     - key: company
       value: "\"/*'"
       disabled: false
     - key: address1
-      value: "{{userAdd1}}"
+      value: "{{runtime_userAdd1}}"
       disabled: true
     - key: address2
-      value: "{{userAdd2}}"
-      disabled: true
+      value: "' OR 1=1 --"
+      disabled: false
     - key: country
-      value: "{{userCountry}}"
+      value: "{{runtime_userCountry}}"
       disabled: true
     - key: zipcode
       value: '"test"'
       disabled: false
     - key: state
-      value: "{{userState}}"
+      value: "{{runtime_userState}}"
       disabled: true
     - key: city
-      value: "{{userCity}}"
+      value: "{{runtime_userCity}}"
       disabled: true
     - key: mobile_number
-      value: "{{userMobile}}"
+      value: "{{runtime_userMobile}}"
       disabled: true
 scripts:
   - type: afterResponse

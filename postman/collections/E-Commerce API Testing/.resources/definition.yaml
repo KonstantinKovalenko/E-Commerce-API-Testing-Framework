@@ -2,37 +2,7 @@ $kind: collection
 name: E-Commerce API Testing
 scripts:
   - type: http:beforeRequest
-    code: "pm.globals.set(\"utils\", `\r
-
-      \r
-
-      \    function validateStatusCode(expectedCode) {\r
-
-      \        pm.test(\\`Status code is \\${expectedCode}\\`, () => {\r
-
-      \            pm.response.to.have.status(expectedCode);\r
-
-      \        });\r
-
-      \    }\r
-
-      \r
-
-      \    function validateJsonValue(key, actualValue, expectedValue) {\r
-
-      \        pm.test(\\`\\${key} validation\\`, () => {\r
-
-      \            pm.expect(actualValue).to.eql(expectedValue);\r
-
-      \        });\r
-
-      \    }\r
-
-      `);\r
-
-      \r
-
-      if(!pm.environment.get(\"userName\")){\r
+    code: "if(!pm.environment.get(\"runtime_userName\")){\r
 
       \    const currentDate = Date.now();\r
 
@@ -40,46 +10,112 @@ scripts:
 
       \r
 
-      \    pm.environment.set(\"userName\", `user_${currentDate}`);\r
+      \    pm.environment.set(\"runtime_expectedStatusCode\", 200);\r
 
-      \    pm.environment.set(\"userEmail\", `email_${currentDate}@qa.com`)\r
+      \    pm.environment.set(\"runtime_expectedResponseCode\", 200);\r
 
-      \    pm.environment.set(\"userPassword\", `Qa!${currentDate}${random}`)\r
-
-      \    pm.environment.set(\"userTitle\", `title_${currentDate}`);\r
-
-      \    pm.environment.set(\"userBDay\", \"20\");\r
-
-      \    pm.environment.set(\"userBMonth\", \"10\");\r
-
-      \    pm.environment.set(\"userBYear\", \"2000\");\r
-
-      \    pm.environment.set(\"userFirst\", `first_${currentDate}`);\r
-
-      \    pm.environment.set(\"userLast\", `last_${currentDate}`);\r
-
-      \    pm.environment.set(\"userCompany\", `company_${currentDate}`);\r
-
-      \    pm.environment.set(\"userAdd1\", `address1_${currentDate}`);\r
-
-      \    pm.environment.set(\"userAdd2\", `address2_${currentDate}`);\r
-
-      \    pm.environment.set(\"userCountry\", `country_${currentDate}`);\r
-
-      \    pm.environment.set(\"userState\", `state_${currentDate}`);\r
-
-      \    pm.environment.set(\"userCity\", `city_${currentDate}`);\r
-
-      \    pm.environment.set(\"userZip\", `zip_${currentDate}`);\r
-
-      \    pm.environment.set(\"userMobile\", `mob_${currentDate}`);\r
+      \    pm.environment.set(\"runtime_expectedMessageKeyword\", \"keyword\");\r
 
       \r
 
-      \    pm.environment.set(\"userInvalidEmail\", `${currentDate}`)\r
+      \    pm.environment.set(\"runtime_userName\", `user_${currentDate}`);\r
+
+      \    pm.environment.set(\"runtime_userEmail\", `email_${currentDate}@qa.com`)\r
+
+      \    pm.environment.set(\"runtime_userPassword\", `Qa!${currentDate}${random}`)\r
+
+      \    pm.environment.set(\"runtime_userTitle\", `title_${currentDate}`);\r
+
+      \    pm.environment.set(\"runtime_userBDay\", \"20\");\r
+
+      \    pm.environment.set(\"runtime_userBMonth\", \"10\");\r
+
+      \    pm.environment.set(\"runtime_userBYear\", \"2000\");\r
+
+      \    pm.environment.set(\"runtime_userFirst\", `first_${currentDate}`);\r
+
+      \    pm.environment.set(\"runtime_userLast\", `last_${currentDate}`);\r
+
+      \    pm.environment.set(\"runtime_userCompany\", `company_${currentDate}`);\r
+
+      \    pm.environment.set(\"runtime_userAdd1\", `address1_${currentDate}`);\r
+
+      \    pm.environment.set(\"runtime_userAdd2\", `address2_${currentDate}`);\r
+
+      \    pm.environment.set(\"runtime_userCountry\", `country_${currentDate}`);\r
+
+      \    pm.environment.set(\"runtime_userState\", `state_${currentDate}`);\r
+
+      \    pm.environment.set(\"runtime_userCity\", `city_${currentDate}`);\r
+
+      \    pm.environment.set(\"runtime_userZip\", `zip_${currentDate}`);\r
+
+      \    pm.environment.set(\"runtime_userMobile\", `mob_${currentDate}`);\r
+
+      \r
+
+      \    pm.environment.set(\"runtime_userInvalidEmail\", `${currentDate}`)\r
 
       \r
 
       \    console.log(\"If worked\")\r
 
       }else{console.log(\"Else worked\")}"
+  - type: http:afterResponse
+    code: "const jsonResponse = pm.response.json();\r
+
+      const ignoredAllRequests = [\r
+
+      \    \"400: Update account using invalid data\",\r
+
+      \    \"200: Clean up variables\"\r
+
+      ];\r
+
+      const ignoredMessageRequests = [\r
+
+      \    \"200: Get user details\",\r
+
+      ];\r
+
+      \r
+
+      if(!ignoredAllRequests.includes(pm.info.requestName)){\r
+
+      \    pm.test(`Status code is ${pm.variables.get(\"runtime_expectedStatusCode\")}`, () => {\r
+
+      \        pm.response.to.have.status(Number(pm.variables.get(\"runtime_expectedStatusCode\")));\r
+
+      \    });\r
+
+      \r
+
+      \    pm.test(`Response code is ${pm.variables.get(\"runtime_expectedResponseCode\")}`, () => {\r
+
+      \        pm.expect(jsonResponse.responseCode)\r
+
+      \            .to.eql(Number(pm.variables.get(\"runtime_expectedResponseCode\")));\r
+
+      \    });\r
+
+      \r
+
+      \    if (!ignoredMessageRequests.includes(pm.info.requestName)) {\r
+
+      \        pm.test(`Response message contains keyword: ${pm.variables.get(\"runtime_expectedMessageKeyword\")}`, () => {\r
+
+      \            pm.expect(jsonResponse.message).to.contain(pm.environment.get(\"runtime_expectedMessageKeyword\"));\r
+
+      \        });\r
+
+      \    }\r
+
+      }\r
+
+      \r
+
+      pm.test(\"Response time is less than 2000ms\", () => {\r
+
+      \    pm.expect(pm.response.responseTime).to.be.below(2000);\r
+
+      });"

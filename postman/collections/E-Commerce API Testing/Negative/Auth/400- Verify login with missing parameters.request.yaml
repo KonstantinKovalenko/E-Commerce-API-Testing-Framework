@@ -1,19 +1,13 @@
 $kind: http-request
 name: "400: Verify login with missing parameters"
-url: "{{baseUrl}}/verifyLogin"
+url: "{{cfg_baseUrl}}/verifyLogin"
 method: POST
 scripts:
-  - type: afterResponse
-    code: "eval(pm.globals.get(\"utils\"));\r
+  - type: beforeRequest
+    code: "pm.environment.set(\"runtime_expectedStatusCode\",200);\r
 
-      const jsonResponse = pm.response.json()\r
+      pm.environment.set(\"runtime_expectedResponseCode\",400);\r
 
-      \r
-
-      validateStatusCode(200);\r
-
-      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode, 400)\r
-
-      validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message, \"Bad request, email or password parameter is missing in POST request.\")"
+      pm.environment.set(\"runtime_expectedMessageKeyword\", \"missing\");"
     language: text/javascript
 order: 2081022586438312

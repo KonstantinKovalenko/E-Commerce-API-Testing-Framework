@@ -1,37 +1,21 @@
 $kind: http-request
 name: "405: Verify Login with not allowed method"
-url: "{{baseUrl}}/verifyLogin"
-method: "{{METHOD}}"
+url: "{{cfg_baseUrl}}/verifyLogin"
+method: "{{RUNTIME_METHOD}}"
 body:
   type: urlencoded
   content:
     - key: email
-      value: "{{userEmail}}"
+      value: "{{runtime_userEmail}}"
       disabled: true
     - key: password
-      value: "{{userPassword}}"
+      value: "{{runtime_userPassword}}"
       disabled: true
 scripts:
   - type: afterResponse
-    code: "eval(pm.globals.get(\"utils\"));\r
+    code: "const methods = [\"GET\", \"PUT\", \"PATCH\", \"DELETE\"];\r
 
-      const jsonResponse = pm.response.json()\r
-
-      const methods = [\"GET\", \"PUT\", \"PATCH\", \"DELETE\"];\r
-
-      \r
-
-      validateStatusCode(200);\r
-
-      validateJsonValue(Object.keys(jsonResponse)[0], jsonResponse.responseCode,
-      405)\r
-
-      validateJsonValue(Object.keys(jsonResponse)[1], jsonResponse.message,
-      \"This request method is not supported.\")\r
-
-      \r
-
-      let currentIndex = Number(pm.environment.get(\"methodIndex\") || 0);\r
+      let currentIndex = Number(pm.environment.get(\"runtime_methodIndex\") || 0);\r
 
       currentIndex++;\r
 
@@ -39,13 +23,13 @@ scripts:
 
       if (currentIndex < methods.length) {\r
 
-      \    pm.environment.set(\"methodIndex\", currentIndex);\r
+      \    pm.environment.set(\"runtime_methodIndex\", currentIndex);\r
 
       \    pm.execution.setNextRequest(pm.info.requestName);\r
 
       } else {\r
 
-      \    pm.environment.unset(\"methodIndex\");\r
+      \    pm.environment.unset(\"runtime_methodIndex\");\r
 
       \    pm.execution.setNextRequest(null);\r
 
@@ -56,8 +40,16 @@ scripts:
 
       \r
 
-      let currentIndex = Number(pm.environment.get(\"methodIndex\") || 0);\r
+      let currentIndex = Number(pm.environment.get(\"runtime_methodIndex\") || 0);\r
 
-      pm.environment.set(\"METHOD\", methods[currentIndex]);"
+      pm.environment.set(\"RUNTIME_METHOD\", methods[currentIndex]);\r
+
+      \r
+
+      pm.environment.set(\"runtime_expectedStatusCode\",200);\r
+
+      pm.environment.set(\"runtime_expectedResponseCode\",405);\r
+
+      pm.environment.set(\"runtime_expectedMessageKeyword\", \"not supported\");"
     language: text/javascript
 order: 3632744608255950

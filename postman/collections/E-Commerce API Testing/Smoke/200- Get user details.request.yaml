@@ -1,0 +1,120 @@
+$kind: http-request
+name: "200: Get user details"
+url: "{{cfg_baseUrl}}/getUserDetailByEmail?email={{runtime_userEmail}}"
+method: GET
+queryParams:
+  email: "{{runtime_userEmail}}"
+scripts:
+  - type: afterResponse
+    code: "const jsonResponse = pm.response.json()\r
+
+      const user = jsonResponse.user;\r
+
+      \r
+
+      const fields = {\r
+
+      \    id: \"number\",\r
+
+      \    name: \"string\",\r
+
+      \    email: \"string\",\r
+
+      \    title: \"string\",\r
+
+      \    birth_day: \"number\",\r
+
+      \    birth_month: \"number\",\r
+
+      \    birth_year: \"number\",\r
+
+      \    first_name: \"string\",\r
+
+      \    last_name: \"string\",\r
+
+      \    company: \"string\",\r
+
+      \    address1: \"string\",\r
+
+      \    address2: \"string\",\r
+
+      \    country: \"string\",\r
+
+      \    state: \"string\",\r
+
+      \    city: \"string\",\r
+
+      \    zipcode: \"string\"\r
+
+      };\r
+
+      \r
+
+      pm.test(\"User fields validation\", () => {\r
+
+      \    Object.keys(fields).forEach(field => {\r
+
+      \        pm.expect(user).to.have.property(field);\r
+
+      \    });\r
+
+      });\r
+
+      \r
+
+      pm.test(\"User data type validation\", () => {\r
+
+      \    Object.entries(fields).forEach(([field, expectedType]) => {\r
+
+      \        pm.expect(user[field]).to.be.a(expectedType);\r
+
+      \    });\r
+
+      \r
+
+      });\r
+
+      \r
+
+      pm.test(\"User data matches environment variables\", () => {\r
+
+      \    pm.expect(user.id).to.be.greaterThan(0);\r
+
+      \    pm.expect(user.name).to.eql(pm.environment.get(\"runtime_userName\"));\r
+
+      \    pm.expect(user.email).to.eql(pm.environment.get(\"runtime_userEmail\"));\r
+
+      \    pm.expect(user.title).to.eql(pm.environment.get(\"runtime_userTitle\"));\r
+
+      \    pm.expect(user.birth_day).to.eql(pm.environment.get(\"runtime_userBDay\"));\r
+
+      \    pm.expect(user.birth_month).to.eql(pm.environment.get(\"runtime_userBMonth\"));\r
+
+      \    pm.expect(user.birth_year).to.eql(pm.environment.get(\"runtime_userBYear\"));\r
+
+      \    pm.expect(user.first_name).to.eql(pm.environment.get(\"runtime_userFirst\"));\r
+
+      \    pm.expect(user.last_name).to.eql(pm.environment.get(\"runtime_userLast\"));\r
+
+      \    pm.expect(user.company).to.eql(pm.environment.get(\"runtime_userCompany\"));\r
+
+      \    pm.expect(user.address1).to.eql(pm.environment.get(\"runtime_userAdd1\"));\r
+
+      \    pm.expect(user.address2).to.eql(pm.environment.get(\"runtime_userAdd2\"));\r
+
+      \    pm.expect(user.country).to.eql(pm.environment.get(\"runtime_userCountry\"));\r
+
+      \    pm.expect(user.state).to.eql(pm.environment.get(\"runtime_userState\"));\r
+
+      \    pm.expect(user.city).to.eql(pm.environment.get(\"runtime_userCity\"));\r
+
+      \    pm.expect(user.zipcode).to.eql(pm.environment.get(\"runtime_userZip\"));\r
+
+      });"
+    language: text/javascript
+  - type: beforeRequest
+    code: "pm.environment.set(\"runtime_expectedStatusCode\",200);\r
+
+      pm.environment.set(\"runtime_expectedResponseCode\",200);"
+    language: text/javascript
+order: 4000

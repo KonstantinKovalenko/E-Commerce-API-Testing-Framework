@@ -2,3 +2,5 @@ name: QA Environment
 values:
   - key: cfg_baseUrl
     value: ''
+  - key: cfg_maxResponseTime
+    value: ''

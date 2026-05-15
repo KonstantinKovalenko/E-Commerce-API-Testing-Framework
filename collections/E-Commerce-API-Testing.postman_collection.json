@@ -1,0 +1,543 @@
+{
+  "info": {
+    "name": "E-Commerce API Testing",
+    "_postman_id": "C530d84AD053D5371444Db0C",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Smoke",
+      "item": [
+        {
+          "name": "200: Create user account",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                  "pm.environment.set(\"runtime_expectedResponseCode\",201);",
+                  "pm.environment.set(\"runtime_expectedMessageKeyword\", \"created\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "name", "value": "{{runtime_userName}}", "type": "text" },
+                { "key": "email", "value": "{{runtime_userEmail}}", "type": "text" },
+                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" },
+                { "key": "title", "value": "{{runtime_userTitle}}", "type": "text" },
+                { "key": "birth_date", "value": "{{runtime_userBDay}}", "type": "text" },
+                { "key": "birth_month", "value": "{{runtime_userBMonth}}", "type": "text" },
+                { "key": "birth_year", "value": "{{runtime_userBYear}}", "type": "text" },
+                { "key": "firstname", "value": "{{runtime_userFirst}}", "type": "text" },
+                { "key": "lastname", "value": "{{runtime_userLast}}", "type": "text" },
+                { "key": "company", "value": "{{runtime_userCompany}}", "type": "text" },
+                { "key": "address1", "value": "{{runtime_userAdd1}}", "type": "text" },
+                { "key": "address2", "value": "{{runtime_userAdd2}}", "type": "text" },
+                { "key": "country", "value": "{{runtime_userCountry}}", "type": "text" },
+                { "key": "zipcode", "value": "{{runtime_userZip}}", "type": "text" },
+                { "key": "state", "value": "{{runtime_userState}}", "type": "text" },
+                { "key": "city", "value": "{{runtime_userCity}}", "type": "text" },
+                { "key": "mobile_number", "value": "{{runtime_userMobile}}", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{cfg_baseUrl}}/createAccount",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["createAccount"]
+            }
+          }
+        },
+        {
+          "name": "200: Verify Login with valid credentials",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                  "pm.environment.set(\"runtime_expectedResponseCode\",200);",
+                  "pm.environment.set(\"runtime_expectedMessageKeyword\", \"exists\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "email", "value": "{{runtime_userEmail}}", "type": "text" },
+                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{cfg_baseUrl}}/verifyLogin",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["verifyLogin"]
+            }
+          }
+        },
+        {
+          "name": "200: Get user details",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                  "pm.environment.set(\"runtime_expectedResponseCode\",200);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const jsonResponse = pm.response.json()",
+                  "const user = jsonResponse.user;",
+                  "",
+                  "const fields = {",
+                  "    id: \"number\",",
+                  "    name: \"string\",",
+                  "    email: \"string\",",
+                  "    title: \"string\",",
+                  "    birth_day: \"number\",",
+                  "    birth_month: \"number\",",
+                  "    birth_year: \"number\",",
+                  "    first_name: \"string\",",
+                  "    last_name: \"string\",",
+                  "    company: \"string\",",
+                  "    address1: \"string\",",
+                  "    address2: \"string\",",
+                  "    country: \"string\",",
+                  "    state: \"string\",",
+                  "    city: \"string\",",
+                  "    zipcode: \"string\"",
+                  "};",
+                  "",
+                  "pm.test(\"User fields validation\", () => {",
+                  "    Object.keys(fields).forEach(field => {",
+                  "        pm.expect(user).to.have.property(field);",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test(\"User data type validation\", () => {",
+                  "    Object.entries(fields).forEach(([field, expectedType]) => {",
+                  "        pm.expect(user[field]).to.be.a(expectedType);",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test(\"User data matches environment variables\", () => {",
+                  "    pm.expect(user.id).to.be.greaterThan(0);",
+                  "    pm.expect(user.name).to.eql(pm.environment.get(\"runtime_userName\"));",
+                  "    pm.expect(user.email).to.eql(pm.environment.get(\"runtime_userEmail\"));",
+                  "    pm.expect(user.title).to.eql(pm.environment.get(\"runtime_userTitle\"));",
+                  "    pm.expect(user.birth_day).to.eql(pm.environment.get(\"runtime_userBDay\"));",
+                  "    pm.expect(user.birth_month).to.eql(pm.environment.get(\"runtime_userBMonth\"));",
+                  "    pm.expect(user.birth_year).to.eql(pm.environment.get(\"runtime_userBYear\"));",
+                  "    pm.expect(user.first_name).to.eql(pm.environment.get(\"runtime_userFirst\"));",
+                  "    pm.expect(user.last_name).to.eql(pm.environment.get(\"runtime_userLast\"));",
+                  "    pm.expect(user.company).to.eql(pm.environment.get(\"runtime_userCompany\"));",
+                  "    pm.expect(user.address1).to.eql(pm.environment.get(\"runtime_userAdd1\"));",
+                  "    pm.expect(user.address2).to.eql(pm.environment.get(\"runtime_userAdd2\"));",
+                  "    pm.expect(user.country).to.eql(pm.environment.get(\"runtime_userCountry\"));",
+                  "    pm.expect(user.state).to.eql(pm.environment.get(\"runtime_userState\"));",
+                  "    pm.expect(user.city).to.eql(pm.environment.get(\"runtime_userCity\"));",
+                  "    pm.expect(user.zipcode).to.eql(pm.environment.get(\"runtime_userZip\"));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{cfg_baseUrl}}/getUserDetailByEmail?email={{runtime_userEmail}}",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["getUserDetailByEmail"],
+              "query": [
+                { "key": "email", "value": "{{runtime_userEmail}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "200: Delete user account",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                  "pm.environment.set(\"runtime_expectedResponseCode\",200);",
+                  "pm.environment.set(\"runtime_expectedMessageKeyword\", \"deleted\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "email", "value": "{{runtime_userEmail}}", "type": "text" },
+                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{cfg_baseUrl}}/deleteAccount",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["deleteAccount"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative",
+      "item": [
+        {
+          "name": "Auth",
+          "item": [
+            {
+              "name": "400: Verify login with missing parameters",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                      "pm.environment.set(\"runtime_expectedResponseCode\",400);",
+                      "pm.environment.set(\"runtime_expectedMessageKeyword\", \"missing\");"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{cfg_baseUrl}}/verifyLogin",
+                  "host": ["{{cfg_baseUrl}}"],
+                  "path": ["verifyLogin"]
+                }
+              }
+            },
+            {
+              "name": "404: Verify Login with invalid credentials",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                      "pm.environment.set(\"runtime_expectedResponseCode\",404);",
+                      "pm.environment.set(\"runtime_expectedMessageKeyword\", \"not found\");"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    { "key": "email", "value": "{{runtime_userInvalidEmail}}", "type": "text" },
+                    { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" }
+                  ]
+                },
+                "url": {
+                  "raw": "{{cfg_baseUrl}}/verifyLogin",
+                  "host": ["{{cfg_baseUrl}}"],
+                  "path": ["verifyLogin"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "400: Create user account with missing parameters",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                      "pm.environment.set(\"runtime_expectedResponseCode\",400);",
+                      "pm.environment.set(\"runtime_expectedMessageKeyword\", \"missing\");"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    { "key": "name", "value": "{{runtime_userName}}", "type": "text", "disabled": false },
+                    { "key": "email", "value": "{{runtime_userEmail}}", "type": "text", "disabled": true },
+                    { "key": "password", "value": "{{runtime_userPassword}}", "type": "text", "disabled": false },
+                    { "key": "title", "value": "{{runtime_userTitle}}", "type": "text", "disabled": false },
+                    { "key": "birth_date", "value": "{{runtime_userBDay}}", "type": "text", "disabled": false }
+                  ]
+                },
+                "url": {
+                  "raw": "{{cfg_baseUrl}}/createAccount",
+                  "host": ["{{cfg_baseUrl}}"],
+                  "path": ["createAccount"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Destructive",
+      "item": [
+        {
+          "name": "400: Create user account with invalid email",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                  "pm.environment.set(\"runtime_expectedResponseCode\",400);",
+                  "pm.environment.set(\"runtime_expectedMessageKeyword\", \"invalid\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "name", "value": "{{runtime_userName}}", "type": "text" },
+                { "key": "email", "value": "{{runtime_userInvalidEmail}}", "type": "text" },
+                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" },
+                { "key": "title", "value": "{{runtime_userTitle}}", "type": "text" },
+                { "key": "birth_date", "value": "{{runtime_userBDay}}", "type": "text" },
+                { "key": "birth_month", "value": "{{runtime_userBMonth}}", "type": "text" },
+                { "key": "birth_year", "value": "{{runtime_userBYear}}", "type": "text" },
+                { "key": "firstname", "value": "{{runtime_userFirst}}", "type": "text" },
+                { "key": "lastname", "value": "{{runtime_userLast}}", "type": "text" },
+                { "key": "company", "value": "{{runtime_userCompany}}", "type": "text" },
+                { "key": "address1", "value": "{{runtime_userAdd1}}", "type": "text" },
+                { "key": "address2", "value": "{{runtime_userAdd2}}", "type": "text" },
+                { "key": "country", "value": "{{runtime_userCountry}}", "type": "text" },
+                { "key": "zipcode", "value": "{{runtime_userZip}}", "type": "text" },
+                { "key": "state", "value": "{{runtime_userState}}", "type": "text" },
+                { "key": "city", "value": "{{runtime_userCity}}", "type": "text" },
+                { "key": "mobile_number", "value": "{{runtime_userMobile}}", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{cfg_baseUrl}}/createAccount",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["createAccount"]
+            }
+          }
+        },
+        {
+          "name": "400: Update account using invalid data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"API should reject invalid input\", () => {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                  "});",
+                  "",
+                  "pm.test(\"Server should handle special characters safely\", () => {",
+                  "    pm.expect(pm.response.code).to.not.eql(500);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "name", "value": "{{runtime_userName}}", "type": "text", "disabled": true },
+                { "key": "email", "value": "{{runtime_userInvalidEmail}}", "type": "text", "disabled": false },
+                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text", "disabled": false },
+                { "key": "title", "value": "{{runtime_userTitle}}", "type": "text", "disabled": true },
+                { "key": "birth_date", "value": "birthday", "type": "text", "disabled": false },
+                { "key": "birth_month", "value": "{{runtime_userBMonth}}", "type": "text", "disabled": true },
+                { "key": "birth_year", "value": "{{runtime_userBYear}}", "type": "text", "disabled": true },
+                { "key": "firstname", "value": "<script>alert(1)</script>", "type": "text", "disabled": false },
+                { "key": "lastname", "value": "{{runtime_userLast}}", "type": "text", "disabled": true },
+                { "key": "company", "value": "\"/*'", "type": "text", "disabled": false },
+                { "key": "address1", "value": "{{runtime_userAdd1}}", "type": "text", "disabled": true },
+                { "key": "address2", "value": "' OR 1=1 --", "type": "text", "disabled": false },
+                { "key": "country", "value": "{{runtime_userCountry}}", "type": "text", "disabled": true },
+                { "key": "zipcode", "value": "\"test\"", "type": "text", "disabled": false },
+                { "key": "state", "value": "{{runtime_userState}}", "type": "text", "disabled": true },
+                { "key": "city", "value": "{{runtime_userCity}}", "type": "text", "disabled": true },
+                { "key": "mobile_number", "value": "{{runtime_userMobile}}", "type": "text", "disabled": true }
+              ]
+            },
+            "url": {
+              "raw": "{{cfg_baseUrl}}/updateAccount",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["updateAccount"]
+            }
+          }
+        },
+        {
+          "name": "405: Verify Login with not allowed method",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const methods = [\"GET\", \"PUT\", \"PATCH\", \"DELETE\"];",
+                  "",
+                  "let currentIndex = Number(pm.environment.get(\"runtime_methodIndex\") || 0);",
+                  "pm.environment.set(\"RUNTIME_METHOD\", methods[currentIndex]);",
+                  "",
+                  "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                  "pm.environment.set(\"runtime_expectedResponseCode\",405);",
+                  "pm.environment.set(\"runtime_expectedMessageKeyword\", \"not supported\");"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const methods = [\"GET\", \"PUT\", \"PATCH\", \"DELETE\"];",
+                  "let currentIndex = Number(pm.environment.get(\"runtime_methodIndex\") || 0);",
+                  "currentIndex++;",
+                  "",
+                  "if (currentIndex < methods.length) {",
+                  "    pm.environment.set(\"runtime_methodIndex\", currentIndex);",
+                  "    pm.execution.setNextRequest(pm.info.requestName);",
+                  "} else {",
+                  "    pm.environment.unset(\"runtime_methodIndex\");",
+                  "    pm.execution.setNextRequest(null);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "{{RUNTIME_METHOD}}",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "email", "value": "{{runtime_userEmail}}", "type": "text", "disabled": true },
+                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text", "disabled": true }
+              ]
+            },
+            "url": {
+              "raw": "{{cfg_baseUrl}}/verifyLogin",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["verifyLogin"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Utils",
+      "item": [
+        {
+          "name": "200: Delete invalid account",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                  "pm.environment.set(\"runtime_expectedResponseCode\",200);",
+                  "pm.environment.set(\"runtime_expectedMessageKeyword\", \"deleted\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "email", "value": "{{runtime_userInvalidEmail}}", "type": "text" },
+                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{cfg_baseUrl}}/deleteAccount",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["deleteAccount"]
+            }
+          }
+        },
+        {
+          "name": "200: Clean up variables",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const keysArray = Object.keys(pm.environment.toObject());",
+                  "keysArray.forEach(key => {",
+                  "    if(key.startsWith(\"runtime_\") || key.startsWith(\"RUNTIME_\")){",
+                  "        pm.environment.unset(key);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{cfg_baseUrl}}/verifyLogin",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["verifyLogin"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

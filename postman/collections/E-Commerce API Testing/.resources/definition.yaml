@@ -114,8 +114,8 @@ scripts:
 
       \r
 
-      pm.test(\"Response time is less than 2000ms\", () => {\r
+      pm.test(`Response time is less than ${pm.environment.get(\"cfg_maxResponseTime\")} ms`, () => {\r
 
-      \    pm.expect(pm.response.responseTime).to.be.below(2000);\r
+      \    pm.expect(pm.response.responseTime).to.be.below(Number(pm.environment.get(\"cfg_maxResponseTime\")));\r
 
-      });"
+      });\r\n"

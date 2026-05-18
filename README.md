@@ -134,9 +134,9 @@ npm run smoke
 ```
 npm run negative
 ```
-### Run Clean up variables
+### Run Destructive
 ```
-npm run utils
+npm run destructive
 ```
 
 ---

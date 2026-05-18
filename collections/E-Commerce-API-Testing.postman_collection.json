@@ -1,9 +1,89 @@
 {
   "info": {
+    "_postman_id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
     "name": "E-Commerce API Testing",
-    "_postman_id": "C530d84AD053D5371444Db0C",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if(!pm.environment.get(\"runtime_userName\")){",
+          "    const currentDate = Date.now();",
+          "    const random = Math.floor(Math.random() * 100);",
+          "",
+          "    pm.environment.set(\"runtime_expectedStatusCode\", 200);",
+          "    pm.environment.set(\"runtime_expectedResponseCode\", 200);",
+          "    pm.environment.set(\"runtime_expectedMessageKeyword\", \"keyword\");",
+          "",
+          "    pm.environment.set(\"runtime_userName\", `user_${currentDate}`);",
+          "    pm.environment.set(\"runtime_userEmail\", `email_${currentDate}@qa.com`);",
+          "    pm.environment.set(\"runtime_userPassword\", `Qa!${currentDate}${random}`);",
+          "    pm.environment.set(\"runtime_userTitle\", `title_${currentDate}`);",
+          "    pm.environment.set(\"runtime_userBDay\", \"20\");",
+          "    pm.environment.set(\"runtime_userBMonth\", \"10\");",
+          "    pm.environment.set(\"runtime_userBYear\", \"2000\");",
+          "    pm.environment.set(\"runtime_userFirst\", `first_${currentDate}`);",
+          "    pm.environment.set(\"runtime_userLast\", `last_${currentDate}`);",
+          "    pm.environment.set(\"runtime_userCompany\", `company_${currentDate}`);",
+          "    pm.environment.set(\"runtime_userAdd1\", `address1_${currentDate}`);",
+          "    pm.environment.set(\"runtime_userAdd2\", `address2_${currentDate}`);",
+          "    pm.environment.set(\"runtime_userCountry\", `country_${currentDate}`);",
+          "    pm.environment.set(\"runtime_userState\", `state_${currentDate}`);",
+          "    pm.environment.set(\"runtime_userCity\", `city_${currentDate}`);",
+          "    pm.environment.set(\"runtime_userZip\", `zip_${currentDate}`);",
+          "    pm.environment.set(\"runtime_userMobile\", `mob_${currentDate}`);",
+          "",
+          "    pm.environment.set(\"runtime_userInvalidEmail\", `${currentDate}`);",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const jsonResponse = pm.response.json();",
+          "",
+          "const ignoredAllRequests = [",
+          "    \"400: Update account using invalid data\",",
+          "    \"200: Smoke cleanup\",",
+          "    \"200: Cleanup runtime variables\",",
+          "    \"200: Negative cleanup\",",
+          "    \"200: Destructive cleanup\"",
+          "];",
+          "",
+          "const ignoredMessageRequests = [",
+          "    \"200: Get user details\",",
+          "];",
+          "",
+          "if(!ignoredAllRequests.includes(pm.info.requestName)){",
+          "    pm.test(`Status code is ${pm.variables.get(\"runtime_expectedStatusCode\")}`, () => {",
+          "        pm.response.to.have.status(Number(pm.variables.get(\"runtime_expectedStatusCode\")));",
+          "    });",
+          "",
+          "    pm.test(`Response code is ${pm.variables.get(\"runtime_expectedResponseCode\")}`, () => {",
+          "        pm.expect(jsonResponse.responseCode)",
+          "            .to.eql(Number(pm.variables.get(\"runtime_expectedResponseCode\")));",
+          "    });",
+          "",
+          "    if (!ignoredMessageRequests.includes(pm.info.requestName)) {",
+          "        pm.test(`Response message contains keyword: ${pm.variables.get(\"runtime_expectedMessageKeyword\")}`, () => {",
+          "            pm.expect(jsonResponse.message).to.contain(pm.environment.get(\"runtime_expectedMessageKeyword\"));",
+          "        });",
+          "    }",
+          "}",
+          "",
+          "pm.test(`Response time is less than ${pm.environment.get(\"cfg_maxResponseTime\")} ms`, () => {",
+          "    pm.expect(pm.response.responseTime).to.be.below(Number(pm.environment.get(\"cfg_maxResponseTime\")));",
+          "});"
+        ]
+      }
+    }
+  ],
   "item": [
     {
       "name": "Smoke",
@@ -26,6 +106,11 @@
           "request": {
             "method": "POST",
             "header": [],
+            "url": {
+              "raw": "{{cfg_baseUrl}}/createAccount",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["createAccount"]
+            },
             "body": {
               "mode": "urlencoded",
               "urlencoded": [
@@ -47,11 +132,6 @@
                 { "key": "city", "value": "{{runtime_userCity}}", "type": "text" },
                 { "key": "mobile_number", "value": "{{runtime_userMobile}}", "type": "text" }
               ]
-            },
-            "url": {
-              "raw": "{{cfg_baseUrl}}/createAccount",
-              "host": ["{{cfg_baseUrl}}"],
-              "path": ["createAccount"]
             }
           }
         },
@@ -73,17 +153,17 @@
           "request": {
             "method": "POST",
             "header": [],
+            "url": {
+              "raw": "{{cfg_baseUrl}}/verifyLogin",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["verifyLogin"]
+            },
             "body": {
               "mode": "urlencoded",
               "urlencoded": [
                 { "key": "email", "value": "{{runtime_userEmail}}", "type": "text" },
                 { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" }
               ]
-            },
-            "url": {
-              "raw": "{{cfg_baseUrl}}/verifyLogin",
-              "host": ["{{cfg_baseUrl}}"],
-              "path": ["verifyLogin"]
             }
           }
         },
@@ -105,7 +185,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "const jsonResponse = pm.response.json()",
+                  "const jsonResponse = pm.response.json();",
                   "const user = jsonResponse.user;",
                   "",
                   "const fields = {",
@@ -175,6 +255,53 @@
           }
         },
         {
+          "name": "200: Update account with valid data",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                  "pm.environment.set(\"runtime_expectedResponseCode\",200);",
+                  "pm.environment.set(\"runtime_expectedMessageKeyword\", \"updated\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{cfg_baseUrl}}/updateAccount",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["updateAccount"]
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "name", "value": "", "type": "text", "disabled": true },
+                { "key": "email", "value": "{{runtime_userEmail}}", "type": "text" },
+                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" },
+                { "key": "title", "value": "someTitle", "type": "text" },
+                { "key": "birth_date", "value": "1", "type": "text" },
+                { "key": "birth_month", "value": "12", "type": "text" },
+                { "key": "birth_year", "value": "2020", "type": "text" },
+                { "key": "firstname", "value": "someFirstName", "type": "text" },
+                { "key": "lastname", "value": "someLastName", "type": "text" },
+                { "key": "company", "value": "someCompany", "type": "text" },
+                { "key": "address1", "value": "someAddress1", "type": "text" },
+                { "key": "address2", "value": "someAddress2", "type": "text" },
+                { "key": "country", "value": "someCountry", "type": "text" },
+                { "key": "zipcode", "value": "55522", "type": "text" },
+                { "key": "state", "value": "someState", "type": "text" },
+                { "key": "city", "value": "someCity", "type": "text" },
+                { "key": "mobile_number", "value": "666666666", "type": "text" }
+              ]
+            }
+          }
+        },
+        {
           "name": "200: Delete user account",
           "event": [
             {
@@ -192,17 +319,45 @@
           "request": {
             "method": "DELETE",
             "header": [],
+            "url": {
+              "raw": "{{cfg_baseUrl}}/deleteAccount",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["deleteAccount"]
+            },
             "body": {
               "mode": "urlencoded",
               "urlencoded": [
                 { "key": "email", "value": "{{runtime_userEmail}}", "type": "text" },
                 { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" }
               ]
-            },
+            }
+          }
+        },
+        {
+          "name": "200: Smoke cleanup",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const keysArray = Object.keys(pm.environment.toObject());",
+                  "keysArray.forEach(key => {",
+                  "    if(key.startsWith(\"runtime_\") || key.startsWith(\"RUNTIME_\")){",
+                  "        pm.environment.unset(key);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
             "url": {
-              "raw": "{{cfg_baseUrl}}/deleteAccount",
+              "raw": "{{cfg_baseUrl}}/verifyLogin",
               "host": ["{{cfg_baseUrl}}"],
-              "path": ["deleteAccount"]
+              "path": ["verifyLogin"]
             }
           }
         }
@@ -257,17 +412,17 @@
               "request": {
                 "method": "POST",
                 "header": [],
+                "url": {
+                  "raw": "{{cfg_baseUrl}}/verifyLogin",
+                  "host": ["{{cfg_baseUrl}}"],
+                  "path": ["verifyLogin"]
+                },
                 "body": {
                   "mode": "urlencoded",
                   "urlencoded": [
                     { "key": "email", "value": "{{runtime_userInvalidEmail}}", "type": "text" },
                     { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" }
                   ]
-                },
-                "url": {
-                  "raw": "{{cfg_baseUrl}}/verifyLogin",
-                  "host": ["{{cfg_baseUrl}}"],
-                  "path": ["verifyLogin"]
                 }
               }
             }
@@ -294,20 +449,276 @@
               "request": {
                 "method": "POST",
                 "header": [],
-                "body": {
-                  "mode": "urlencoded",
-                  "urlencoded": [
-                    { "key": "name", "value": "{{runtime_userName}}", "type": "text", "disabled": false },
-                    { "key": "email", "value": "{{runtime_userEmail}}", "type": "text", "disabled": true },
-                    { "key": "password", "value": "{{runtime_userPassword}}", "type": "text", "disabled": false },
-                    { "key": "title", "value": "{{runtime_userTitle}}", "type": "text", "disabled": false },
-                    { "key": "birth_date", "value": "{{runtime_userBDay}}", "type": "text", "disabled": false }
-                  ]
-                },
                 "url": {
                   "raw": "{{cfg_baseUrl}}/createAccount",
                   "host": ["{{cfg_baseUrl}}"],
                   "path": ["createAccount"]
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    { "key": "name", "value": "{{runtime_userName}}", "type": "text" },
+                    { "key": "email", "value": "{{runtime_userEmail}}", "type": "text", "disabled": true },
+                    { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" },
+                    { "key": "title", "value": "{{runtime_userTitle}}", "type": "text" },
+                    { "key": "birth_date", "value": "{{runtime_userBDay}}", "type": "text" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "200: Negative cleanup",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const keysArray = Object.keys(pm.environment.toObject());",
+                  "keysArray.forEach(key => {",
+                  "    if(key.startsWith(\"runtime_\") || key.startsWith(\"RUNTIME_\")){",
+                  "        pm.environment.unset(key);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{cfg_baseUrl}}/verifyLogin",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["verifyLogin"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Destructive",
+      "item": [
+        {
+          "name": "Flow",
+          "item": [
+            {
+              "name": "400: Create user account with invalid email",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                      "pm.environment.set(\"runtime_expectedResponseCode\",400);",
+                      "pm.environment.set(\"runtime_expectedMessageKeyword\", \"invalid\");"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{cfg_baseUrl}}/createAccount",
+                  "host": ["{{cfg_baseUrl}}"],
+                  "path": ["createAccount"]
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    { "key": "name", "value": "{{runtime_userName}}", "type": "text" },
+                    { "key": "email", "value": "{{runtime_userInvalidEmail}}", "type": "text" },
+                    { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" },
+                    { "key": "title", "value": "{{runtime_userTitle}}", "type": "text" },
+                    { "key": "birth_date", "value": "{{runtime_userBDay}}", "type": "text" },
+                    { "key": "birth_month", "value": "{{runtime_userBMonth}}", "type": "text" },
+                    { "key": "birth_year", "value": "{{runtime_userBYear}}", "type": "text" },
+                    { "key": "firstname", "value": "{{runtime_userFirst}}", "type": "text" },
+                    { "key": "lastname", "value": "{{runtime_userLast}}", "type": "text" },
+                    { "key": "company", "value": "{{runtime_userCompany}}", "type": "text" },
+                    { "key": "address1", "value": "{{runtime_userAdd1}}", "type": "text" },
+                    { "key": "address2", "value": "{{runtime_userAdd2}}", "type": "text" },
+                    { "key": "country", "value": "{{runtime_userCountry}}", "type": "text" },
+                    { "key": "zipcode", "value": "{{runtime_userZip}}", "type": "text" },
+                    { "key": "state", "value": "{{runtime_userState}}", "type": "text" },
+                    { "key": "city", "value": "{{runtime_userCity}}", "type": "text" },
+                    { "key": "mobile_number", "value": "{{runtime_userMobile}}", "type": "text" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "400: Update account using invalid data",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"API should reject invalid input\", () => {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                      "});",
+                      "",
+                      "pm.test(\"Server should handle special characters safely\", () => {",
+                      "    pm.expect(pm.response.code).to.not.eql(500);",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{cfg_baseUrl}}/updateAccount",
+                  "host": ["{{cfg_baseUrl}}"],
+                  "path": ["updateAccount"]
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    { "key": "name", "value": "{{runtime_userName}}", "type": "text", "disabled": true },
+                    { "key": "email", "value": "{{runtime_userInvalidEmail}}", "type": "text" },
+                    { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" },
+                    { "key": "title", "value": "{{runtime_userTitle}}", "type": "text", "disabled": true },
+                    { "key": "birth_date", "value": "birthday", "type": "text" },
+                    { "key": "birth_month", "value": "{{runtime_userBMonth}}", "type": "text", "disabled": true },
+                    { "key": "birth_year", "value": "{{runtime_userBYear}}", "type": "text", "disabled": true },
+                    { "key": "firstname", "value": "<script>alert(1)</script>", "type": "text" },
+                    { "key": "lastname", "value": "{{runtime_userLast}}", "type": "text", "disabled": true },
+                    { "key": "company", "value": "\"/*'", "type": "text" },
+                    { "key": "address1", "value": "{{runtime_userAdd1}}", "type": "text", "disabled": true },
+                    { "key": "address2", "value": "' OR 1=1 --", "type": "text" },
+                    { "key": "country", "value": "{{runtime_userCountry}}", "type": "text", "disabled": true },
+                    { "key": "zipcode", "value": "\"test\"", "type": "text" },
+                    { "key": "state", "value": "{{runtime_userState}}", "type": "text", "disabled": true },
+                    { "key": "city", "value": "{{runtime_userCity}}", "type": "text", "disabled": true },
+                    { "key": "mobile_number", "value": "{{runtime_userMobile}}", "type": "text", "disabled": true }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "200: Delete invalid account",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                      "pm.environment.set(\"runtime_expectedResponseCode\",200);",
+                      "pm.environment.set(\"runtime_expectedMessageKeyword\", \"deleted\");"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{cfg_baseUrl}}/deleteAccount",
+                  "host": ["{{cfg_baseUrl}}"],
+                  "path": ["deleteAccount"]
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    { "key": "email", "value": "{{runtime_userInvalidEmail}}", "type": "text" },
+                    { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cycle",
+          "item": [
+            {
+              "name": "405: Verify Login with not allowed method",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const methods = [\"GET\", \"PUT\", \"PATCH\", \"DELETE\"];",
+                      "",
+                      "let currentIndex = Number(pm.environment.get(\"runtime_methodIndex\") || 0);",
+                      "pm.environment.set(\"RUNTIME_METHOD\", methods[currentIndex]);",
+                      "",
+                      "pm.environment.set(\"runtime_expectedStatusCode\",200);",
+                      "pm.environment.set(\"runtime_expectedResponseCode\",405);",
+                      "pm.environment.set(\"runtime_expectedMessageKeyword\", \"not supported\");"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const methods = [\"GET\", \"PUT\", \"PATCH\", \"DELETE\"];",
+                      "let currentIndex = Number(pm.environment.get(\"runtime_methodIndex\") || 0);",
+                      "currentIndex++;",
+                      "",
+                      "if (currentIndex < methods.length) {",
+                      "    pm.environment.set(\"runtime_methodIndex\", currentIndex);",
+                      "    pm.execution.setNextRequest(pm.info.requestName);",
+                      "} else {",
+                      "    pm.execution.setNextRequest(\"200: Destructive cleanup\");",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "{{RUNTIME_METHOD}}",
+                "header": [],
+                "url": {
+                  "raw": "{{cfg_baseUrl}}/verifyLogin",
+                  "host": ["{{cfg_baseUrl}}"],
+                  "path": ["verifyLogin"]
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    { "key": "email", "value": "{{runtime_userEmail}}", "type": "text", "disabled": true },
+                    { "key": "password", "value": "{{runtime_userPassword}}", "type": "text", "disabled": true }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "200: Destructive cleanup",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const keysArray = Object.keys(pm.environment.toObject());",
+                      "keysArray.forEach(key => {",
+                      "    if(key.startsWith(\"runtime_\") || key.startsWith(\"RUNTIME_\")){",
+                      "        pm.environment.unset(key);",
+                      "    }",
+                      "});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{cfg_baseUrl}}/verifyLogin",
+                  "host": ["{{cfg_baseUrl}}"],
+                  "path": ["verifyLogin"]
                 }
               }
             }
@@ -316,10 +727,10 @@
       ]
     },
     {
-      "name": "Destructive",
+      "name": "Utils",
       "item": [
         {
-          "name": "400: Create user account with invalid email",
+          "name": "200: Create test user account",
           "event": [
             {
               "listen": "prerequest",
@@ -327,8 +738,8 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.environment.set(\"runtime_expectedStatusCode\",200);",
-                  "pm.environment.set(\"runtime_expectedResponseCode\",400);",
-                  "pm.environment.set(\"runtime_expectedMessageKeyword\", \"invalid\");"
+                  "pm.environment.set(\"runtime_expectedResponseCode\",201);",
+                  "pm.environment.set(\"runtime_expectedMessageKeyword\", \"created\");"
                 ]
               }
             }
@@ -336,11 +747,16 @@
           "request": {
             "method": "POST",
             "header": [],
+            "url": {
+              "raw": "{{cfg_baseUrl}}/createAccount",
+              "host": ["{{cfg_baseUrl}}"],
+              "path": ["createAccount"]
+            },
             "body": {
               "mode": "urlencoded",
               "urlencoded": [
                 { "key": "name", "value": "{{runtime_userName}}", "type": "text" },
-                { "key": "email", "value": "{{runtime_userInvalidEmail}}", "type": "text" },
+                { "key": "email", "value": "{{runtime_userEmail}}", "type": "text" },
                 { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" },
                 { "key": "title", "value": "{{runtime_userTitle}}", "type": "text" },
                 { "key": "birth_date", "value": "{{runtime_userBDay}}", "type": "text" },
@@ -357,128 +773,11 @@
                 { "key": "city", "value": "{{runtime_userCity}}", "type": "text" },
                 { "key": "mobile_number", "value": "{{runtime_userMobile}}", "type": "text" }
               ]
-            },
-            "url": {
-              "raw": "{{cfg_baseUrl}}/createAccount",
-              "host": ["{{cfg_baseUrl}}"],
-              "path": ["createAccount"]
             }
           }
         },
         {
-          "name": "400: Update account using invalid data",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"API should reject invalid input\", () => {",
-                  "    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
-                  "});",
-                  "",
-                  "pm.test(\"Server should handle special characters safely\", () => {",
-                  "    pm.expect(pm.response.code).to.not.eql(500);",
-                  "});"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "urlencoded",
-              "urlencoded": [
-                { "key": "name", "value": "{{runtime_userName}}", "type": "text", "disabled": true },
-                { "key": "email", "value": "{{runtime_userInvalidEmail}}", "type": "text", "disabled": false },
-                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text", "disabled": false },
-                { "key": "title", "value": "{{runtime_userTitle}}", "type": "text", "disabled": true },
-                { "key": "birth_date", "value": "birthday", "type": "text", "disabled": false },
-                { "key": "birth_month", "value": "{{runtime_userBMonth}}", "type": "text", "disabled": true },
-                { "key": "birth_year", "value": "{{runtime_userBYear}}", "type": "text", "disabled": true },
-                { "key": "firstname", "value": "<script>alert(1)</script>", "type": "text", "disabled": false },
-                { "key": "lastname", "value": "{{runtime_userLast}}", "type": "text", "disabled": true },
-                { "key": "company", "value": "\"/*'", "type": "text", "disabled": false },
-                { "key": "address1", "value": "{{runtime_userAdd1}}", "type": "text", "disabled": true },
-                { "key": "address2", "value": "' OR 1=1 --", "type": "text", "disabled": false },
-                { "key": "country", "value": "{{runtime_userCountry}}", "type": "text", "disabled": true },
-                { "key": "zipcode", "value": "\"test\"", "type": "text", "disabled": false },
-                { "key": "state", "value": "{{runtime_userState}}", "type": "text", "disabled": true },
-                { "key": "city", "value": "{{runtime_userCity}}", "type": "text", "disabled": true },
-                { "key": "mobile_number", "value": "{{runtime_userMobile}}", "type": "text", "disabled": true }
-              ]
-            },
-            "url": {
-              "raw": "{{cfg_baseUrl}}/updateAccount",
-              "host": ["{{cfg_baseUrl}}"],
-              "path": ["updateAccount"]
-            }
-          }
-        },
-        {
-          "name": "405: Verify Login with not allowed method",
-          "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const methods = [\"GET\", \"PUT\", \"PATCH\", \"DELETE\"];",
-                  "",
-                  "let currentIndex = Number(pm.environment.get(\"runtime_methodIndex\") || 0);",
-                  "pm.environment.set(\"RUNTIME_METHOD\", methods[currentIndex]);",
-                  "",
-                  "pm.environment.set(\"runtime_expectedStatusCode\",200);",
-                  "pm.environment.set(\"runtime_expectedResponseCode\",405);",
-                  "pm.environment.set(\"runtime_expectedMessageKeyword\", \"not supported\");"
-                ]
-              }
-            },
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const methods = [\"GET\", \"PUT\", \"PATCH\", \"DELETE\"];",
-                  "let currentIndex = Number(pm.environment.get(\"runtime_methodIndex\") || 0);",
-                  "currentIndex++;",
-                  "",
-                  "if (currentIndex < methods.length) {",
-                  "    pm.environment.set(\"runtime_methodIndex\", currentIndex);",
-                  "    pm.execution.setNextRequest(pm.info.requestName);",
-                  "} else {",
-                  "    pm.environment.unset(\"runtime_methodIndex\");",
-                  "    pm.execution.setNextRequest(null);",
-                  "}"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "{{RUNTIME_METHOD}}",
-            "header": [],
-            "body": {
-              "mode": "urlencoded",
-              "urlencoded": [
-                { "key": "email", "value": "{{runtime_userEmail}}", "type": "text", "disabled": true },
-                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text", "disabled": true }
-              ]
-            },
-            "url": {
-              "raw": "{{cfg_baseUrl}}/verifyLogin",
-              "host": ["{{cfg_baseUrl}}"],
-              "path": ["verifyLogin"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Utils",
-      "item": [
-        {
-          "name": "200: Delete invalid account",
+          "name": "200: Delete user by credentials",
           "event": [
             {
               "listen": "prerequest",
@@ -495,22 +794,22 @@
           "request": {
             "method": "DELETE",
             "header": [],
-            "body": {
-              "mode": "urlencoded",
-              "urlencoded": [
-                { "key": "email", "value": "{{runtime_userInvalidEmail}}", "type": "text" },
-                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" }
-              ]
-            },
             "url": {
               "raw": "{{cfg_baseUrl}}/deleteAccount",
               "host": ["{{cfg_baseUrl}}"],
               "path": ["deleteAccount"]
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "email", "value": "{{runtime_userEmail}}", "type": "text" },
+                { "key": "password", "value": "{{runtime_userPassword}}", "type": "text" }
+              ]
             }
           }
         },
         {
-          "name": "200: Clean up variables",
+          "name": "200: Cleanup runtime variables",
           "event": [
             {
               "listen": "test",

@@ -29,9 +29,7 @@ scripts:
 
       } else {\r
 
-      \    pm.environment.unset(\"runtime_methodIndex\");\r
-
-      \    pm.execution.setNextRequest(null);\r
+      \    pm.execution.setNextRequest(\"200: Destructive cleanup\");\r
 
       }"
     language: text/javascript
@@ -52,4 +50,4 @@ scripts:
 
       pm.environment.set(\"runtime_expectedMessageKeyword\", \"not supported\");"
     language: text/javascript
-order: 3632744608255950
+order: 1779099272116

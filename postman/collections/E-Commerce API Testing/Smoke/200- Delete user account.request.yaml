@@ -15,4 +15,4 @@ scripts:
 
       pm.environment.set(\"runtime_expectedMessageKeyword\", \"deleted\");"
     language: text/javascript
-order: 5000
+order: 6000

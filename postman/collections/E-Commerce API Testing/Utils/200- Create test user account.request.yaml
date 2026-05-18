@@ -1,12 +1,12 @@
 $kind: http-request
-name: "400: Create user account with invalid email"
+name: "200: Create test user account"
 url: "{{cfg_baseUrl}}/createAccount"
 method: POST
 body:
   type: urlencoded
   content:
     name: "{{runtime_userName}}"
-    email: "{{runtime_userInvalidEmail}}"
+    email: "{{runtime_userEmail}}"
     password: "{{runtime_userPassword}}"
     title: "{{runtime_userTitle}}"
     birth_date: "{{runtime_userBDay}}"
@@ -26,8 +26,8 @@ scripts:
   - type: beforeRequest
     code: "pm.environment.set(\"runtime_expectedStatusCode\",200);\r
 
-      pm.environment.set(\"runtime_expectedResponseCode\",400);\r
+      pm.environment.set(\"runtime_expectedResponseCode\",201);\r
 
-      pm.environment.set(\"runtime_expectedMessageKeyword\", \"invalid\");"
+      pm.environment.set(\"runtime_expectedMessageKeyword\", \"created\");"
     language: text/javascript
-order: 146355719118145
+order: 4478760377928624

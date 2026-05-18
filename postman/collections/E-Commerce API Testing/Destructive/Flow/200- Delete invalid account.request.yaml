@@ -1,11 +1,11 @@
 $kind: http-request
-name: "200: Verify Login with valid credentials"
-url: "{{cfg_baseUrl}}/verifyLogin"
-method: POST
+name: "200: Delete invalid account"
+url: "{{cfg_baseUrl}}/deleteAccount"
+method: DELETE
 body:
   type: urlencoded
   content:
-    email: "{{runtime_userEmail}}"
+    email: "{{runtime_userInvalidEmail}}"
     password: "{{runtime_userPassword}}"
 scripts:
   - type: beforeRequest
@@ -13,6 +13,6 @@ scripts:
 
       pm.environment.set(\"runtime_expectedResponseCode\",200);\r
 
-      pm.environment.set(\"runtime_expectedMessageKeyword\", \"exists\");"
+      pm.environment.set(\"runtime_expectedMessageKeyword\", \"deleted\");"
     language: text/javascript
-order: 3000
+order: 4000

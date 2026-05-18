@@ -1,0 +1,19 @@
+$kind: http-request
+name: "200: Destructive cleanup"
+url: "{{cfg_baseUrl}}/verifyLogin"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: "const keysArray = Object.keys(pm.environment.toObject());\r
+
+      keysArray.forEach(key => {\r
+
+      \    if(key.startsWith(\"runtime_\") || key.startsWith(\"RUNTIME_\")){\r
+
+      \        pm.environment.unset(key);\r
+
+      \    }\r
+
+      });"
+    language: text/javascript
+order: 1012539244784080

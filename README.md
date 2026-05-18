@@ -134,9 +134,9 @@ npm run smoke
 ```
 npm run negative
 ```
-### Run Full Regression
+### Run Clean up variables
 ```
-npm run regression
+npm run utils
 ```
 
 ---

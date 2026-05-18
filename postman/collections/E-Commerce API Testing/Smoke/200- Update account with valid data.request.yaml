@@ -1,0 +1,67 @@
+$kind: http-request
+name: "200: Update account with valid data"
+url: "{{cfg_baseUrl}}/updateAccount"
+method: PUT
+body:
+  type: urlencoded
+  content:
+    - key: name
+      value: ""
+      disabled: true
+    - key: email
+      value: "{{runtime_userEmail}}"
+      disabled: false
+    - key: password
+      value: "{{runtime_userPassword}}"
+      disabled: false
+    - key: title
+      value: someTitle
+      disabled: false
+    - key: birth_date
+      value: "1"
+      disabled: false
+    - key: birth_month
+      value: "12"
+      disabled: false
+    - key: birth_year
+      value: "2020"
+      disabled: false
+    - key: firstname
+      value: someFirstName
+      disabled: false
+    - key: lastname
+      value: someLastName
+      disabled: false
+    - key: company
+      value: someCompany
+      disabled: false
+    - key: address1
+      value: someAddress1
+      disabled: false
+    - key: address2
+      value: someAddress2
+      disabled: false
+    - key: country
+      value: someCountry
+      disabled: false
+    - key: zipcode
+      value: "55522"
+      disabled: false
+    - key: state
+      value: someState
+      disabled: false
+    - key: city
+      value: someCity
+      disabled: false
+    - key: mobile_number
+      value: "666666666"
+      disabled: false
+scripts:
+  - type: beforeRequest
+    code: "pm.environment.set(\"runtime_expectedStatusCode\",200);\r
+
+      pm.environment.set(\"runtime_expectedResponseCode\",200);\r
+
+      pm.environment.set(\"runtime_expectedMessageKeyword\", \"updated\");"
+    language: text/javascript
+order: 5000

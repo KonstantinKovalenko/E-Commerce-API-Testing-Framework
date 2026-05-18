@@ -1,5 +1,5 @@
 $kind: http-request
-name: "200: Clean up variables"
+name: "200: Negative cleanup"
 url: "{{cfg_baseUrl}}/verifyLogin"
 method: DELETE
 scripts:
@@ -16,4 +16,4 @@ scripts:
 
       });"
     language: text/javascript
-order: 1778755868475
+order: 2268443718719906

@@ -56,11 +56,7 @@ scripts:
 
       \    pm.environment.set(\"runtime_userInvalidEmail\", `${currentDate}`)\r
 
-      \r
-
-      \    console.log(\"If worked\")\r
-
-      }else{console.log(\"Else worked\")}"
+      }"
   - type: http:afterResponse
     code: "const jsonResponse = pm.response.json();\r
 
@@ -68,7 +64,13 @@ scripts:
 
       \    \"400: Update account using invalid data\",\r
 
-      \    \"200: Clean up variables\"\r
+      \    \"200: Smoke cleanup\",\r
+
+      \    \"200: Cleanup runtime variables\",\r
+
+      \    \"200: Negative cleanup\",\r
+
+      \    \"200: Destructive cleanup\"\r
 
       ];\r
 

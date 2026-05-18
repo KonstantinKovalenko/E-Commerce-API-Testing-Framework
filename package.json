@@ -15,12 +15,16 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "smoke": "newman run collections/E-Commerce-API-Testing.postman_collection.json -e environments/Environment.postman_environment.json --folder Smoke",
     "negative": "newman run collections/E-Commerce-API-Testing.postman_collection.json -e environments/Environment.postman_environment.json --folder Negative",
-    "utils": "newman run collections/E-Commerce-API-Testing.postman_collection.json -e environments/Environment.postman_environment.json --folder Utils"
+    "utils": "newman run collections/E-Commerce-API-Testing.postman_collection.json -e environments/Environment.postman_environment.json --folder Utils",
+    "report_smoke": "newman run collections/E-Commerce-API-Testing.postman_collection.json -e environments/Environment.postman_environment.json --folder Smoke -r htmlextra --reporter-htmlextra-export reports/report.html",
+    "report_negative": "newman run collections/E-Commerce-API-Testing.postman_collection.json -e environments/Environment.postman_environment.json --folder Negative -r htmlextra --reporter-htmlextra-export reports/report.html"
   },
   "devDependencies": {
     "newman": "^6.2.2"
+  },
+  "dependencies": {
+    "newman-reporter-htmlextra": "^1.23.1"
   }
 }

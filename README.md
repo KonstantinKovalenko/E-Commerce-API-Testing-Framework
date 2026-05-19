@@ -1,23 +1,47 @@
 # E-Commerce API Testing Framework
-
+![CI](https://github.com/KonstantinKovalenko/E-Commerce-API-Testing-Framework/actions/workflows/api-tests.yml/badge.svg?branch=main)
 ## Project Overview
 
-API automation testing framework for e-commerce application backend testing using Postman, Newman, and JavaScript.
+API automation framework for backend testing of an e-commerce system, designed as a portfolio-level QA engineering project.
 
 The framework covers:
-- API functional testing
-- end-to-end user flows
-- positive and negative scenarios
-- destructive testing
-- dynamic test data generation
-- reusable validation logic
-- automated execution with Newman
-- HTML reporting
-
-This project was created as a portfolio-level API testing framework focused on backend QA automation practices.
+- API test design for core business flows
+- validation of backend business logic
+- CI execution via GitHub Actions
+- test reporting via Newman (HTML Extra reporter)
 
 Target API:
 https://automationexercise.com/api_list
+
+---
+
+## CI/CD Pipeline
+
+The project includes automated CI execution using GitHub Actions.
+
+On every push to the `main` branch, the following steps are executed:
+
+- Repository checkout
+- Node.js environment setup
+- Installation of dependencies
+- Execution of Newman smoke tests
+- Generation of HTML test report (htmlextra)
+- Upload of test report as GitHub Actions artifact
+
+This pipeline simulates a real CI workflow used in QA environments, ensuring automated validation of API functionality on every code change.
+
+---
+
+## Reporting
+
+Test execution reports are generated using Newman with the HTML Extra reporter.
+
+Reports include:
+- request/response details
+- assertion results
+- execution timeline
+
+Reports are automatically generated in CI and stored as GitHub Actions artifacts.
 
 ---
 
@@ -31,68 +55,32 @@ https://automationexercise.com/api_list
 
 ---
 
-## Features
+## Test Strategy
 
-### API Flow Testing
-Implemented complete user lifecycle scenarios:
+The framework includes three levels of testing:
 
-- Create account
-- Verify login
-- Get user details
-- Update account
-- Delete account
-
----
-
-### Dynamic Test Data
-The framework automatically generates:
-- usernames
-- emails
-- passwords
-- runtime user data
-
-This allows repeatable and independent test execution without hardcoded credentials.
-
----
-
-### Validation Layer
-Implemented validations for:
-- HTTP status codes
-- API response codes
-- response messages
-- response time
-- required fields
-- data types
-- business logic consistency
-
----
+### Smoke Testing
+Critical end-to-end API flows:
+- account creation
+- login verification
+- user data retrieval
+- account update
+- account deletion
 
 ### Negative Testing
-Implemented negative scenarios for:
+Validation of invalid inputs and error handling:
 - invalid credentials
-- malformed payloads
-- SQL injection-like inputs
-- script injection payloads
-- invalid request data
-
----
+- malformed requests
+- injection attempts
+- invalid data formats
 
 ### Destructive Testing
-Separate destructive test suite created for:
-- risky operations
-- invalid account manipulation
-- cleanup-related scenarios
+Risk-based scenarios affecting system state:
+- account deletion
+- invalid account operations
+- cleanup validation
 
----
-
-### Cleanup Strategy
-The framework includes automatic runtime data cleanup:
-- created test users are deleted after execution
-- runtime environment variables are cleared automatically
-
----
-
-## Project Structure
+### Project Structure
 
 ```text
 E-Commerce-API-Testing-Framework/
@@ -105,20 +93,6 @@ E-Commerce-API-Testing-Framework/
 ├── package.json
 └── README.md
 ```
----
-## Test Suites
-### Smoke
-
-Critical end-to-end user flow validation.
-
-### Negative
-
-Validation of invalid input handling and unexpected data.
-
-### Destructive
-
-Risky and system-affecting scenarios separated from regular execution.
-
 ---
 
 ## Running Tests
@@ -141,28 +115,21 @@ npm run destructive
 
 ---
 
-## Reporting
+## Key QA Automation Concepts Used
+This project demonstrates practical QA engineering skills in API automation:
 
-The project uses Newman HTML Extra Reporter for detailed execution reports.
-
-Generated reports include:
-
-- passed/failed tests
-- request details
-- response information
-- execution statistics
+- designing API test flows based on business requirements
+- validating backend behavior through positive and negative scenarios
+- implementing dynamic test data generation for test independence
+- structuring test suites based on risk levels (smoke / negative / destructive)
+- integrating automated API tests into CI pipelines (GitHub Actions)
+- analyzing test execution results via Newman reporting
 
 ---
 
-## Key QA Automation Concepts Used
-- API automation
-- reusable test architecture
-- runtime data generation
-- environment management
-- response validation
-- cleanup strategy
-- destructive testing separation
-- Newman CLI execution
+## Project Status
+
+Completed portfolio-level API automation project with CI integration and reporting.
 
 ---
 

@@ -21,5 +21,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Newman HTML Reporter
+        run: npm install -g newman-reporter-htmlextra
+
       - name: Run Smoke Tests
         run: npm run smoke

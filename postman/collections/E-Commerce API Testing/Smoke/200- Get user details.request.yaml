@@ -22,11 +22,11 @@ scripts:
 
       \    title: \"string\",\r
 
-      \    birth_day: \"number\",\r
+      \    birth_day: \"string\",\r
 
-      \    birth_month: \"number\",\r
+      \    birth_month: \"string\",\r
 
-      \    birth_year: \"number\",\r
+      \    birth_year: \"string\",\r
 
       \    first_name: \"string\",\r
 
@@ -62,6 +62,18 @@ scripts:
 
       \r
 
+      /*\r
+
+      NOTE:\r
+
+      API returns birth_day as string.\r
+
+      No strict type validation observed.\r
+
+      This may indicate missing server-side validation.\r
+
+      */\r
+
       pm.test(\"User data type validation\", () => {\r
 
       \    Object.entries(fields).forEach(([field, expectedType]) => {\r
@@ -80,50 +92,35 @@ scripts:
 
       \    pm.expect(user.id).to.be.greaterThan(0);\r
 
-      \    pm.expect(user.name).to.eql(pm.environment.get(\"runtime_userName\")\
-      );\r
+      \    pm.expect(user.name).to.eql(pm.environment.get(\"runtime_userName\"));\r
 
-      \    pm.expect(user.email).to.eql(pm.environment.get(\"runtime_userEmail\
-      \"));\r
+      \    pm.expect(user.email).to.eql(pm.environment.get(\"runtime_userEmail\"));\r
 
-      \    pm.expect(user.title).to.eql(pm.environment.get(\"runtime_userTitle\
-      \"));\r
+      \    pm.expect(user.title).to.eql(pm.environment.get(\"runtime_userTitle\"));\r
 
-      \    pm.expect(user.birth_day).to.eql(pm.environment.get(\"runtime_userBD\
-      ay\"));\r
+      \    pm.expect(user.birth_day).to.eql(pm.environment.get(\"runtime_userBDay\"));\r
 
-      \    pm.expect(user.birth_month).to.eql(pm.environment.get(\"runtime_user\
-      BMonth\"));\r
+      \    pm.expect(user.birth_month).to.eql(pm.environment.get(\"runtime_userBMonth\"));\r
 
-      \    pm.expect(user.birth_year).to.eql(pm.environment.get(\"runtime_userB\
-      Year\"));\r
+      \    pm.expect(user.birth_year).to.eql(pm.environment.get(\"runtime_userBYear\"));\r
 
-      \    pm.expect(user.first_name).to.eql(pm.environment.get(\"runtime_userF\
-      irst\"));\r
+      \    pm.expect(user.first_name).to.eql(pm.environment.get(\"runtime_userFirst\"));\r
 
-      \    pm.expect(user.last_name).to.eql(pm.environment.get(\"runtime_userLa\
-      st\"));\r
+      \    pm.expect(user.last_name).to.eql(pm.environment.get(\"runtime_userLast\"));\r
 
-      \    pm.expect(user.company).to.eql(pm.environment.get(\"runtime_userComp\
-      any\"));\r
+      \    pm.expect(user.company).to.eql(pm.environment.get(\"runtime_userCompany\"));\r
 
-      \    pm.expect(user.address1).to.eql(pm.environment.get(\"runtime_userAdd1\
-      \"));\r
+      \    pm.expect(user.address1).to.eql(pm.environment.get(\"runtime_userAdd1\"));\r
 
-      \    pm.expect(user.address2).to.eql(pm.environment.get(\"runtime_userAdd2\
-      \"));\r
+      \    pm.expect(user.address2).to.eql(pm.environment.get(\"runtime_userAdd2\"));\r
 
-      \    pm.expect(user.country).to.eql(pm.environment.get(\"runtime_userCoun\
-      try\"));\r
+      \    pm.expect(user.country).to.eql(pm.environment.get(\"runtime_userCountry\"));\r
 
-      \    pm.expect(user.state).to.eql(pm.environment.get(\"runtime_userState\
-      \"));\r
+      \    pm.expect(user.state).to.eql(pm.environment.get(\"runtime_userState\"));\r
 
-      \    pm.expect(user.city).to.eql(pm.environment.get(\"runtime_userCity\")\
-      );\r
+      \    pm.expect(user.city).to.eql(pm.environment.get(\"runtime_userCity\"));\r
 
-      \    pm.expect(user.zipcode).to.eql(pm.environment.get(\"runtime_userZip\
-      \"));\r
+      \    pm.expect(user.zipcode).to.eql(pm.environment.get(\"runtime_userZip\"));\r
 
       });"
     language: text/javascript

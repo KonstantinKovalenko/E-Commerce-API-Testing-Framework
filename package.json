@@ -15,7 +15,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "smoke": "newman run collections/E-Commerce-API-Testing.postman_collection.json -e environments/Environment.postman_environment.json --folder Smoke -r cli,htmlextra --reporter-htmlextra-export ./reports/report.html",
+    "smoke": "newman run collections/E-Commerce-API-Testing.postman_collection.json -e environments/Environment.postman_environment.json --folder Smoke -r htmlextra --reporter-htmlextra-export ./reports/report.html",
     "negative": "newman run collections/E-Commerce-API-Testing.postman_collection.json -e environments/Environment.postman_environment.json --folder Negative -r htmlextra --reporter-htmlextra-export ./reports/report.html",
     "destructive": "newman run collections/E-Commerce-API-Testing.postman_collection.json -e environments/Environment.postman_environment.json --folder Destructive -r htmlextra --reporter-htmlextra-export reports/report.html"
   },

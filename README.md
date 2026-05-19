@@ -25,8 +25,8 @@ On every push to the `main` branch, the following steps are executed:
 - Node.js environment setup
 - Installation of dependencies
 - Execution of Newman smoke tests
-- Generation of HTML test report (htmlextra)
-- Upload of test report as GitHub Actions artifact
+- Generation of HTML test report (Newman HTML Extra reporter)
+- Upload of report as GitHub Actions artifact for download and review
 
 This pipeline simulates a real CI workflow used in QA environments, ensuring automated validation of API functionality on every code change.
 
@@ -34,14 +34,16 @@ This pipeline simulates a real CI workflow used in QA environments, ensuring aut
 
 ## Reporting
 
-Test execution reports are generated using Newman with the HTML Extra reporter.
+The project uses Newman with the HTML Extra reporter to generate structured API test execution reports.
 
-Reports include:
-- request/response details
-- assertion results
-- execution timeline
+Reports provide detailed visibility into test execution results, including:
 
-Reports are automatically generated in CI and stored as GitHub Actions artifacts.
+- request and response data for each API call
+- assertion results for validation checks
+- execution timeline for performance overview
+- grouping of tests by suite (Smoke / Negative / Destructive)
+
+Reports are automatically generated during CI execution and saved as downloadable GitHub Actions artifacts for analysis and debugging.
 
 ---
 
@@ -58,6 +60,8 @@ Reports are automatically generated in CI and stored as GitHub Actions artifacts
 ## Test Strategy
 
 The framework is organized into three levels of API testing based on risk and system behavior.
+
+---
 
 ### Smoke Testing
 
@@ -94,10 +98,12 @@ Risk-based scenarios focusing on system behavior under invalid, malicious, or ed
 - account creation with invalid email formats (API accepts and creates record)
 - account update with invalid data (SQL injection attempts, special characters, malformed input)
 - deletion of invalid or corrupted user accounts
-- login method misuse testing via unsupported HTTP methods (e.g. GET/POST/PUT/DELETE behavior validation, including 405 responses)
+- API method misuse testing (unsupported HTTP methods like GET/PUT/DELETE, including 405 responses)
 - cleanup after execution to reset system state
 
 This suite is designed to expose weaknesses in validation logic and backend data handling.
+
+---
 
 ### Project Structure
 

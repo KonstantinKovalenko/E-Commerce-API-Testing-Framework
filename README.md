@@ -57,28 +57,47 @@ Reports are automatically generated in CI and stored as GitHub Actions artifacts
 
 ## Test Strategy
 
-The framework includes three levels of testing:
+The framework is organized into three levels of API testing based on risk and system behavior.
 
 ### Smoke Testing
-Critical end-to-end API flows:
+
+Critical end-to-end user flow validation covering the main business lifecycle:
+
 - account creation
 - login verification
 - user data retrieval
 - account update
 - account deletion
+- environment cleanup after execution (test data removal and variable reset)
+
+This suite ensures the core API flow works as expected under normal conditions.
+
+---
 
 ### Negative Testing
-Validation of invalid inputs and error handling:
-- invalid credentials
-- malformed requests
-- injection attempts
-- invalid data formats
+
+Validation of API behavior under invalid or incomplete input conditions:
+
+- login with invalid credentials
+- login with missing parameters
+- account creation with missing parameters
+- cleanup execution for invalid test data
+
+This suite verifies input validation, error handling, and API robustness.
+
+---
 
 ### Destructive Testing
-Risk-based scenarios affecting system state:
-- account deletion
-- invalid account operations
-- cleanup validation
+
+Risk-based scenarios focusing on system behavior under invalid, malicious, or edge-case operations:
+
+- account creation with invalid email formats (API accepts and creates record)
+- account update with invalid data (SQL injection attempts, special characters, malformed input)
+- deletion of invalid or corrupted user accounts
+- login method misuse testing via unsupported HTTP methods (e.g. GET/POST/PUT/DELETE behavior validation, including 405 responses)
+- cleanup after execution to reset system state
+
+This suite is designed to expose weaknesses in validation logic and backend data handling.
 
 ### Project Structure
 

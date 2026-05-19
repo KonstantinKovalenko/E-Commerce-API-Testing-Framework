@@ -20,9 +20,7 @@
     "destructive": "newman run collections/E-Commerce-API-Testing.postman_collection.json -e environments/Environment.postman_environment.json --folder Destructive -r htmlextra --reporter-htmlextra-export reports/report.html"
   },
   "devDependencies": {
-    "newman": "^6.2.2"
-  },
-  "dependencies": {
+    "newman": "^6.2.2",
     "newman-reporter-htmlextra": "^1.23.1"
   }
 }
